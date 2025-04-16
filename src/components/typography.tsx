@@ -84,9 +84,7 @@ export function TypographyP({
   className?: string;
 }) {
   return (
-    <p
-      className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}
-    >
+    <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
       {children}
     </p>
   );
@@ -147,11 +145,7 @@ export function TypographyLead({
   className?: string;
 }) {
   return (
-    <p
-      className={cn("text-xl text-muted-foreground", className)}
-    >
-      {children}
-    </p>
+    <p className={cn("text-xl text-muted-foreground", className)}>{children}</p>
   );
 }
 
@@ -163,11 +157,7 @@ export function TypographyLarge({
   className?: string;
 }) {
   return (
-    <div
-      className={cn("text-lg font-semibold", className)}
-    >
-      {children}
-    </div>
+    <div className={cn("text-lg font-semibold", className)}>{children}</div>
   );
 }
 
@@ -179,9 +169,7 @@ export function TypographySmall({
   className?: string;
 }) {
   return (
-    <small
-      className={cn("text-sm font-medium leading-none", className)}
-    >
+    <small className={cn("text-sm font-medium leading-none", className)}>
       {children}
     </small>
   );
@@ -195,10 +183,6 @@ export function TypographyMuted({
   className?: string;
 }) {
   return (
-    <p
-      className={cn("text-sm text-muted-foreground", className)}
-    >
-      {children}
-    </p>
+    <p className={cn("text-sm text-muted-foreground", className)}>{children}</p>
   );
 }

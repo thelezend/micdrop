@@ -1,14 +1,26 @@
+import { TypographySmall } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { TypographyMuted, TypographySmall } from "@/components/typography";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Mic, Users } from "lucide-react";
 import Link from "next/link";
+import { MultiTooltip } from "../ui/multi-tooltip";
 
 interface RoomCardProps {
   id: string;
   title: string;
   description: string;
-  speakersCount: number;
+  speakers: {
+    id: number;
+    name: string;
+    image: string;
+  }[];
   listenersCount: number;
   isLive: boolean;
   tags?: string[];
@@ -22,31 +34,35 @@ export function RoomCard({
   id,
   title,
   description,
-  speakersCount,
+  speakers,
   listenersCount,
   isLive,
   tags = [],
 }: RoomCardProps) {
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md">
+    <Card className="h-full w-full overflow-hidden">
       <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-bold line-clamp-1">{title}</CardTitle>
+        <div className="flex items-start justify-between">
+          <CardTitle className="line-clamp-2 text-lg font-bold">
+            {title}
+          </CardTitle>
           {isLive && (
-            <span className="px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-full flex items-center">
-              <span className="mr-1 h-2 w-2 rounded-full bg-white animate-pulse"></span>
+            <span className="flex items-center rounded-full bg-red-500 px-2 py-1 text-xs font-semibold text-white">
+              <span className="mr-1 h-2 w-2 animate-pulse rounded-full bg-white"></span>
               LIVE
             </span>
           )}
         </div>
-        <CardDescription className="line-clamp-2 text-sm">{description}</CardDescription>
+        <CardDescription className="line-clamp-2 text-sm">
+          {description}
+        </CardDescription>
       </CardHeader>
       <CardContent className="pb-2">
-        <div className="flex space-x-2 mb-2">
+        <div className="mb-2 flex space-x-2">
           {tags.map((tag) => (
             <span
               key={tag}
-              className="px-2 py-0.5 bg-muted text-muted-foreground rounded-full text-xs"
+              className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs"
             >
               {tag}
             </span>
@@ -54,13 +70,13 @@ export function RoomCard({
         </div>
       </CardContent>
       <CardFooter className="flex justify-between pt-0">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-6">
           <div className="flex items-center">
-            <Mic className="h-4 w-4 mr-1 text-primary" />
-            <TypographySmall>{speakersCount}</TypographySmall>
+            <Mic className="text-primary mr-1 h-4 w-4" />
+            <MultiTooltip items={speakers} />
           </div>
           <div className="flex items-center">
-            <Users className="h-4 w-4 mr-1 text-primary" />
+            <Users className="text-primary mr-1 h-4 w-4" />
             <TypographySmall>{listenersCount}</TypographySmall>
           </div>
         </div>
