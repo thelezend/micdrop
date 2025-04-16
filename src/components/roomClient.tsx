@@ -5,6 +5,7 @@ import { ListenersList } from "@/components/room/listeners-list";
 import { RoomControls } from "@/components/room/room-controls";
 import { SpeakersGrid } from "@/components/room/speakers-grid";
 import { TypographyH1, TypographyP } from "@/components/typography";
+import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ const RoomClient = ({
   classname,
   roomId,
 }: {
-  classname: string;
+  classname?: string;
   roomId: string;
 }) => {
   const router = useRouter();
@@ -137,7 +138,7 @@ const RoomClient = ({
         speakers: prev.speakers.map((speaker) =>
           speaker.id === currentUserId
             ? { ...speaker, isMuted: !isMuted }
-            : speaker
+            : speaker,
         ),
       }));
     }
@@ -160,7 +161,7 @@ const RoomClient = ({
       listeners: prev.listeners.map((listener) =>
         listener.id === currentUserId
           ? { ...listener, isRaisingHand: !isRaisingHand }
-          : listener
+          : listener,
       ),
     }));
   };
@@ -183,7 +184,7 @@ const RoomClient = ({
 
     // Remove from listeners
     const updatedListeners = roomData.listeners.filter(
-      (l) => l.id !== listenerId
+      (l) => l.id !== listenerId,
     );
 
     // Add to speakers
@@ -234,7 +235,7 @@ const RoomClient = ({
         roomData.speakers[Math.floor(Math.random() * roomData.speakers.length)]
           .id;
       const randomSpeaker = roomData.speakers.find(
-        (s) => s.id === randomSpeakerId
+        (s) => s.id === randomSpeakerId,
       );
 
       if (randomSpeaker && randomSpeaker.id !== currentUserId) {
@@ -273,13 +274,13 @@ const RoomClient = ({
   }, [currentUserId]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className={cn("container mx-auto py-8", classname)}>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <TypographyH1 className="text-2xl md:text-3xl font-bold mb-2">
+        <TypographyH1 className="mb-2 text-2xl font-bold md:text-3xl">
           {roomData.title}
         </TypographyH1>
         <TypographyP className="text-muted-foreground mb-6">
@@ -287,16 +288,16 @@ const RoomClient = ({
         </TypographyP>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
           {/* Speakers Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-card rounded-lg border shadow-sm overflow-hidden"
+            className="bg-card overflow-hidden rounded-lg border shadow-sm"
           >
-            <div className="p-4 border-b">
+            <div className="border-b p-4">
               <h2 className="font-semibold">Speakers</h2>
             </div>
             <AnimatePresence>
@@ -326,7 +327,7 @@ const RoomClient = ({
               listeners={roomData.listeners}
               onApproveRaiseHand={
                 roomData.speakers.some(
-                  (s) => s.id === currentUserId && s.isHost
+                  (s) => s.id === currentUserId && s.isHost,
                 )
                   ? handleApproveRaiseHand
                   : undefined

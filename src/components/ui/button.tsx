@@ -32,7 +32,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 function Button({
@@ -46,14 +46,15 @@ function Button({
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot : "button";
-  const customEffects = "transition-all hover:scale-[1.05] active:scale-[0.95]";
+  const customEffects =
+    "transition-all hover:scale-[1.05] active:scale-[0.95] hover:cursor-pointer";
 
   return (
     <Comp
       data-slot="button"
       className={cn(
         buttonVariants({ variant, size, className }),
-        customEffects
+        customEffects,
       )}
       {...props}
     />

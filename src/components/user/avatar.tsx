@@ -1,5 +1,9 @@
+import {
+  AvatarFallback,
+  AvatarImage,
+  Avatar as UIAvatar,
+} from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { Avatar as UIAvatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mic, MicOff } from "lucide-react";
 
 interface AvatarProps {
@@ -34,7 +38,7 @@ export function UserAvatar({
     .join("")
     .toUpperCase()
     .substring(0, 2);
-  
+
   // Determine size classes
   const sizeClasses = {
     sm: "h-8 w-8 text-xs",
@@ -44,23 +48,28 @@ export function UserAvatar({
 
   return (
     <div className={cn("relative", className)}>
-      <UIAvatar className={cn(sizeClasses[size], isSpeaking && "ring-2 ring-primary ring-offset-2")}>
-        <AvatarImage src={src} alt={name} />
+      <UIAvatar
+        className={cn(
+          sizeClasses[size],
+          isSpeaking && "ring-primary ring-2 ring-offset-2",
+        )}
+      >
+        <AvatarImage src={src} alt={name} className="object-cover" />
         <AvatarFallback className="bg-muted">{initials}</AvatarFallback>
       </UIAvatar>
-      
+
       {showStatus && (
-        <div className="absolute -bottom-1 -right-1 rounded-full bg-background p-0.5">
+        <div className="bg-background absolute -right-1 -bottom-1 rounded-full p-0.5">
           {isMuted ? (
-            <MicOff className="h-4 w-4 text-destructive" />
+            <MicOff className="text-destructive h-4 w-4" />
           ) : (
-            <Mic className="h-4 w-4 text-primary" />
+            <Mic className="text-primary h-4 w-4" />
           )}
         </div>
       )}
-      
+
       {isRaisingHand && (
-        <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-yellow-500 animate-pulse" />
+        <div className="absolute -top-1 -right-1 h-4 w-4 animate-pulse rounded-full bg-yellow-500" />
       )}
     </div>
   );

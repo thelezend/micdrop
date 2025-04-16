@@ -30,7 +30,7 @@ export function Navigation() {
     },
     {
       name: "Profile",
-      href: "/profile/you",
+      href: "/profile/johnwick",
       icon: User,
       active: pathname.startsWith("/profile"),
     },
@@ -47,26 +47,26 @@ export function Navigation() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur"
     >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Mic className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <Mic className="text-primary h-6 w-6" />
+            <span className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
               MicDrop
             </span>
           </Link>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden items-center gap-6 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
-                item.active ? "text-primary" : "text-muted-foreground"
+                "hover:text-primary flex items-center gap-2 text-sm font-medium transition-colors",
+                item.active ? "text-primary" : "text-muted-foreground",
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -95,15 +95,15 @@ export function Navigation() {
       </div>
 
       {/* Mobile navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background z-50">
-        <div className="grid grid-cols-3 h-16">
+      <div className="bg-background fixed right-0 bottom-0 left-0 z-50 border-t md:hidden">
+        <div className="grid h-16 grid-cols-3">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors hover:text-primary",
-                item.active ? "text-primary" : "text-muted-foreground"
+                "hover:text-primary flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
+                item.active ? "text-primary" : "text-muted-foreground",
               )}
             >
               <item.icon className="h-5 w-5" />

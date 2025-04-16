@@ -1,7 +1,7 @@
 "use client";
 
-import { ProfileHeader } from "@/components/user/profile-header";
 import { PastRooms } from "@/components/user/past-rooms";
+import { ProfileHeader } from "@/components/user/profile-header";
 import { UserNetwork } from "@/components/user/user-network";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -14,30 +14,34 @@ import { toast } from "sonner";
 export default function ProfileClient({ username }: { username: string }) {
   const [activeTab, setActiveTab] = useState("rooms");
   const [isFollowing, setIsFollowing] = useState(false);
-  
+
   // Mock user data
   const userData = {
     username,
-    displayName: username === "you" ? "Your Name" : `${username.charAt(0).toUpperCase()}${username.slice(1)}`,
-    bio: "Voice enthusiast and conversation starter. Join my rooms to discuss technology, design, and the future of social media.",
-    avatarUrl: undefined,
+    displayName:
+      username === "johnwick"
+        ? "John Wick"
+        : `${username.charAt(0).toUpperCase()}${username.slice(1)}`,
+    bio: "Silent type, but when I speak—people listen. Let’s talk tech, tactics, and truth on MicDrop. 🎤",
+    avatarUrl: "/avatars/john-wick.png",
     followersCount: 128,
     followingCount: 95,
-    isCurrentUser: username === "you",
+    isCurrentUser: username === "johnwick",
     socialLinks: {
-      website: "https://example.com",
-      twitter: "twitterhandle",
-      instagram: "instagramhandle",
-      github: "githubhandle",
+      website: "https://johnwick.movie/",
+      twitter: "the_lezend",
+      instagram: "johnwickofficial",
+      github: "thelezend",
     },
   };
-  
+
   // Mock past rooms data
   const pastRooms = [
     {
       id: "room-1",
       title: "The Future of Remote Work",
-      description: "Discussing how remote work is changing and what to expect in the coming years.",
+      description:
+        "Discussing how remote work is changing and what to expect in the coming years.",
       date: "Apr 10, 2025",
       participantsCount: 42,
       duration: "1h 15m",
@@ -46,7 +50,8 @@ export default function ProfileClient({ username }: { username: string }) {
     {
       id: "room-2",
       title: "Design Systems in 2025",
-      description: "Exploring modern design systems and how they're evolving with new tools and technologies.",
+      description:
+        "Exploring modern design systems and how they're evolving with new tools and technologies.",
       date: "Apr 5, 2025",
       participantsCount: 28,
       duration: "45m",
@@ -55,7 +60,8 @@ export default function ProfileClient({ username }: { username: string }) {
     {
       id: "room-3",
       title: "Startup Funding Strategies",
-      description: "Expert advice on securing funding for early-stage startups in today's market.",
+      description:
+        "Expert advice on securing funding for early-stage startups in today's market.",
       date: "Mar 28, 2025",
       participantsCount: 56,
       duration: "2h",
@@ -64,21 +70,22 @@ export default function ProfileClient({ username }: { username: string }) {
     {
       id: "room-4",
       title: "AI in Everyday Life",
-      description: "How artificial intelligence is impacting our daily routines and what's coming next.",
+      description:
+        "How artificial intelligence is impacting our daily routines and what's coming next.",
       date: "Mar 15, 2025",
       participantsCount: 35,
       duration: "1h 30m",
       isHost: false,
     },
   ];
-  
+
   // Mock followers data
   const followers = [
     {
       id: "user-1",
       username: "sarahchen",
       displayName: "Sarah Chen",
-      avatarUrl: undefined,
+      avatarUrl: "/avatars/1.jpg",
       bio: "Product designer and voice room enthusiast",
       isFollowing: true,
     },
@@ -86,7 +93,7 @@ export default function ProfileClient({ username }: { username: string }) {
       id: "user-2",
       username: "mikejohnson",
       displayName: "Mike Johnson",
-      avatarUrl: undefined,
+      avatarUrl: "/avatars/3.jpg",
       bio: "Tech entrepreneur and podcast host",
       isFollowing: false,
     },
@@ -94,19 +101,19 @@ export default function ProfileClient({ username }: { username: string }) {
       id: "user-3",
       username: "emmabrown",
       displayName: "Emma Brown",
-      avatarUrl: undefined,
+      avatarUrl: "/avatars/4.jpg",
       bio: "UX researcher focused on voice interfaces",
       isFollowing: true,
     },
   ];
-  
+
   // Mock following data
   const following = [
     {
       id: "user-4",
       username: "alexsmith",
       displayName: "Alex Smith",
-      avatarUrl: undefined,
+      avatarUrl: "/avatars/5.jpg",
       bio: "AI researcher and tech writer",
       isFollowing: true,
     },
@@ -114,7 +121,7 @@ export default function ProfileClient({ username }: { username: string }) {
       id: "user-5",
       username: "jameswilson",
       displayName: "James Wilson",
-      avatarUrl: undefined,
+      avatarUrl: "/avatars/7.jpg",
       bio: "Startup founder and mentor",
       isFollowing: true,
     },
@@ -122,20 +129,20 @@ export default function ProfileClient({ username }: { username: string }) {
       id: "user-6",
       username: "linapark",
       displayName: "Lina Park",
-      avatarUrl: undefined,
+      avatarUrl: "/avatars/6.jpg",
       bio: "Voice artist and audio producer",
       isFollowing: true,
     },
   ];
-  
+
   // Handle follow/unfollow
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
     toast(isFollowing ? "Unfollowed user" : "Following user");
   };
-  
+
   // Handle follow/unfollow for network users
-  const handleNetworkFollow = (userId: string) => {
+  const handleNetworkFollow = () => {
     // In a real app, this would update the state of the specific user
     toast(`User follow status updated`);
   };
@@ -156,7 +163,7 @@ export default function ProfileClient({ username }: { username: string }) {
         onActiveTabChange={setActiveTab}
         activeTab={activeTab}
       />
-      
+
       <div className="mt-8">
         {activeTab === "rooms" ? (
           <PastRooms rooms={pastRooms} />
