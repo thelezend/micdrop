@@ -51,7 +51,7 @@ export function UserAvatar({
       <UIAvatar
         className={cn(
           sizeClasses[size],
-          isSpeaking && "ring-primary ring-2 ring-offset-2",
+          isSpeaking ?? "ring-primary ring-2 ring-offset-2",
         )}
       >
         <AvatarImage src={src} alt={name} className="object-cover" />

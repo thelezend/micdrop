@@ -18,10 +18,7 @@ export default function ProfileClient({ username }: { username: string }) {
   // Mock user data
   const userData = {
     username,
-    displayName:
-      username === "johnwick"
-        ? "John Wick"
-        : `${username.charAt(0).toUpperCase()}${username.slice(1)}`,
+    displayName: "John Wick",
     bio: "Silent type, but when I speak—people listen. Let’s talk tech, tactics, and truth on MicDrop. 🎤",
     avatarUrl: "/avatars/john-wick.png",
     followersCount: 128,

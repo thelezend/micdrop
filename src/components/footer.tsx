@@ -45,7 +45,7 @@ const Footer = ({ className }: { className?: string }) => {
     >
       <div className="container mx-auto flex flex-col items-center justify-center gap-4 py-6">
         <motion.div className="flex items-center">
-          <MicVocal className="rotate-180 transform" />
+          <MicVocal className="rotate-180" />
           <BrandText className="text-3xl lg:text-3xl">MicDrop</BrandText>
         </motion.div>
 
