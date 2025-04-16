@@ -1,9 +1,27 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { MicVocal } from "lucide-react";
 import Link from "next/link";
 import BrandText from "./brand-text";
 import { GitHubIcon, InstagramIcon, XIcon, YouTubeIcon } from "./logos";
+import { motion } from "framer-motion";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
 
 /**
  * Footer component with social media links
@@ -19,42 +37,61 @@ const Footer = ({ className }: { className?: string }) => {
   ];
 
   return (
-    <footer className={cn("w-full border-t-2 bg-stone-950", className)}>
+    <motion.footer
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={cn("w-full border-t-2 bg-stone-950", className)}
+    >
       <div className="container mx-auto flex flex-col items-center justify-center gap-4 py-6">
-        <div className="flex items-center">
+        <motion.div className="flex items-center">
           <MicVocal className="rotate-180 transform" />
           <BrandText className="text-3xl lg:text-3xl">MicDrop</BrandText>
-        </div>
-        <div className="flex items-center space-x-4">
+        </motion.div>
+
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="flex items-center space-x-4"
+        >
           {socialLinks.map((social, index) => {
             const Icon = social.icon;
             return (
-              <Button
-                key={index}
-                variant="outline"
-                size="icon"
-                className="rounded-full duration-200 hover:-translate-y-1"
-                asChild
-                aria-label={social.label}
-              >
-                <Link
-                  href={social.href || ""}
-                  target={social.href ? "_blank" : "_self"}
-                  rel="noopener noreferrer"
+              <motion.div key={index} variants={item}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full duration-200 hover:-translate-y-1"
+                  asChild
+                  aria-label={social.label}
                 >
-                  <Icon className="h-5 w-5" />
-                </Link>
-              </Button>
+                  <Link
+                    href={social.href || ""}
+                    target={social.href ? "_blank" : "_self"}
+                    rel="noopener noreferrer"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </Link>
+                </Button>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
-        <span className="text-center text-sm text-gray-500">
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.2 }}
+          viewport={{ once: true }}
+          className="text-center text-sm text-gray-500"
+        >
           © 2025 Micdrop. All rights reserved. <br />
           Dropped by Navaneeth Dev 🎤
-        </span>
+        </motion.span>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 
