@@ -1,5 +1,6 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/footer";
 import { Navigation } from "@/components/navigation";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -38,6 +39,7 @@ export default function RootLayout({
         >
           <Navigation />
           <main className="min-h-screen">{children}</main>
+          <Footer />
           <Toaster />
         </ThemeProvider>
       </body>

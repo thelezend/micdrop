@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Mic, Users } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "../ui/badge";
 import { MultiTooltip } from "../ui/multi-tooltip";
 
 interface RoomCardProps {
@@ -57,18 +58,17 @@ export function RoomCard({
           {description}
         </CardDescription>
       </CardHeader>
+
       <CardContent className="pb-2">
         <div className="mb-2 flex space-x-2">
           {tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs"
-            >
+            <Badge key={tag} variant="secondary">
               {tag}
-            </span>
+            </Badge>
           ))}
         </div>
       </CardContent>
+
       <CardFooter className="flex justify-between pt-0">
         <div className="flex items-center gap-6">
           <div className="flex items-center">

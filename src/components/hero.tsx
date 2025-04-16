@@ -8,14 +8,15 @@ import BrandText from "./brand-text";
 import { TypographyH1, TypographyH2, TypographyP } from "./typography";
 import { Button } from "./ui/button";
 import { ShootingStars } from "./ui/shooting-stars";
+import { Spotlight } from "./ui/spotlight-new";
 import { StarsBackground } from "./ui/stars-background";
 
 const Hero = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "relative isolate min-h-screen flex items-center justify-center flex-col lg:gap-10 gap-8",
-        className
+        "relative isolate flex min-h-screen flex-col items-center justify-center gap-8 lg:gap-10",
+        className,
       )}
     >
       <div className="flex items-center justify-center gap-1">
@@ -32,7 +33,7 @@ const Hero = ({ className }: { className?: string }) => {
             animate={{ rotate: [0, -120, -80, -90] }}
             transition={{ delay: 1.2, duration: 1.2, ease: "easeInOut" }}
           >
-            <MicVocal className="h-12 w-12 text-primary transform rotate-270" />
+            <MicVocal className="text-primary h-12 w-12 rotate-270 transform" />
           </motion.div>
         </motion.div>
 
@@ -65,7 +66,7 @@ const Hero = ({ className }: { className?: string }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 2 }}
       >
-        <TypographyH2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl border-b-0">
+        <TypographyH2 className="border-b-0 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           Voice based social conversations in real time
         </TypographyH2>
       </motion.div>
@@ -75,7 +76,7 @@ const Hero = ({ className }: { className?: string }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 2.2 }}
       >
-        <TypographyP className="text-center text-muted-foreground max-w-2xl">
+        <TypographyP className="text-muted-foreground max-w-2xl text-center">
           Join live audio rooms, connect with like-minded people, and share your
           thoughts on topics that matter to you. No recordings, no pressure -
           just authentic conversations.
@@ -112,6 +113,7 @@ const Hero = ({ className }: { className?: string }) => {
       <div className="-z-10">
         <StarsBackground />
         <ShootingStars />
+        <Spotlight />
       </div>
     </div>
   );
