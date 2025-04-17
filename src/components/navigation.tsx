@@ -48,7 +48,7 @@ export function Navigation() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur"
+      className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur"
     >
       <div className="container mx-auto flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 transition-transform hover:scale-105 active:scale-95">
