@@ -253,7 +253,18 @@ export default function DashboardPage() {
             Explore Rooms
           </motion.span>
         </TypographyH1>
-        <div className="flex items-center gap-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 15,
+            delay: 0.5,
+          }}
+          viewport={{ once: true }}
+          className="flex items-center gap-2"
+        >
           <Search />
           <Input
             className="w-80"
@@ -261,7 +272,7 @@ export default function DashboardPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-        </div>
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
