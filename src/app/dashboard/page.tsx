@@ -1,12 +1,12 @@
 "use client";
 
 import { RoomCard } from "@/components/room/room-card";
+import { CreateRoomDialog } from "@/components/room/create-room-dialog";
 import { TypographyH1 } from "@/components/typography";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { Clock, Plus, Search, TrendingUp, Users } from "lucide-react";
+import { Clock, Search, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
 
 const container = {
@@ -273,22 +273,7 @@ export default function DashboardPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-            delay: 0.3,
-          }}
-          viewport={{ once: true }}
-        >
-          <Button className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Create Room
-          </Button>
-        </motion.div>
+        <CreateRoomDialog />
       </div>
 
       <Tabs defaultValue="trending" className="mb-8">
