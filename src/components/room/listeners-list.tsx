@@ -2,9 +2,19 @@ import { TypographySmall } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user/avatar";
 import { motion } from "framer-motion";
-import { Users } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Flag,
+  MessageSquare,
+  User,
+  UserPlus,
+  Users,
+  VolumeX,
+} from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { Badge } from "../ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const container = {
   hidden: { opacity: 0 },
@@ -31,6 +41,8 @@ interface Listener {
 interface ListenersListProps {
   listeners: Listener[];
   onApproveRaiseHand?: (listenerId: string) => void;
+  isCurrentUserHost?: boolean;
+  currentUserId?: string;
 }
 
 /**
@@ -41,6 +53,8 @@ interface ListenersListProps {
 export function ListenersList({
   listeners,
   onApproveRaiseHand,
+  isCurrentUserHost = false,
+  currentUserId,
 }: ListenersListProps) {
   // Sort listeners to show those raising hands first
   const sortedListeners = [...listeners].sort((a, b) => {
@@ -72,31 +86,104 @@ export function ListenersList({
               variants={item}
               className="relative flex flex-col items-center"
             >
-              <Link
-                href="/profile/johnwick"
-                className="hover:scale-105 hover:underline active:scale-95"
-              >
-                <UserAvatar
-                  src={listener.avatar}
-                  name={listener.name}
-                  size="lg"
-                  isRaisingHand={listener.isRaisingHand}
-                  className="mb-2"
-                />
-                <TypographySmall className="text-center font-medium">
-                  {listener.name}
-                </TypographySmall>
-              </Link>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="cursor-pointer hover:scale-105 active:scale-95">
+                    <UserAvatar
+                      src={listener.avatar}
+                      name={listener.name}
+                      size="lg"
+                      isRaisingHand={listener.isRaisingHand}
+                      className="mb-2"
+                    />
+                    <TypographySmall className="text-center font-medium">
+                      {listener.name}
+                    </TypographySmall>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-56 p-3">
+                  <div className="flex flex-col gap-3">
+                    {/* View Profile */}
+                    <Link href="/profile/johnwick" className="w-full" passHref>
+                      <Button
+                        variant="ghost"
+                        className="flex w-full items-center justify-start gap-2"
+                      >
+                        <User className="h-4 w-4" />
+                        <span>View Profile</span>
+                      </Button>
+                    </Link>
 
-              {listener.isRaisingHand && onApproveRaiseHand && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-2"
-                  onClick={() => onApproveRaiseHand(listener.id)}
-                >
-                  Approve
-                </Button>
+                    {/* Direct Message */}
+                    <Button
+                      variant="ghost"
+                      className="flex w-full items-center justify-start gap-2"
+                      onClick={() => {
+                        toast.info(`Starting chat with ${listener.name}`, {
+                          duration: 2000,
+                        });
+                        // In a real app, this would open the DM interface
+                      }}
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      <span>Direct Message</span>
+                    </Button>
+
+                    {/* Invite to Stage - only show for hosts or moderators and for users raising hand */}
+                    {isCurrentUserHost &&
+                      listener.isRaisingHand &&
+                      onApproveRaiseHand && (
+                        <Button
+                          variant="ghost"
+                          className="flex w-full items-center justify-start gap-2"
+                          onClick={() => onApproveRaiseHand(listener.id)}
+                        >
+                          <UserPlus className="h-4 w-4" />
+                          <span>Invite to Stage</span>
+                        </Button>
+                      )}
+
+                    {/* Mute Listener - only show for hosts or moderators */}
+                    {isCurrentUserHost && listener.id !== currentUserId && (
+                      <Button
+                        variant="ghost"
+                        className="flex w-full items-center justify-start gap-2"
+                        onClick={() => {
+                          toast.success(`${listener.name} has been muted`, {
+                            duration: 2000,
+                          });
+                          // In a real app, this would mute the listener
+                        }}
+                      >
+                        <VolumeX className="h-4 w-4" />
+                        <span>Mute Listener</span>
+                      </Button>
+                    )}
+
+                    {/* Report User - available for everyone */}
+                    <Button
+                      variant="ghost"
+                      className="text-destructive hover:text-destructive flex w-full items-center justify-start gap-2"
+                      onClick={() => {
+                        toast.success(`Report submitted`, {
+                          description: `Thank you for helping to keep the community safe`,
+                          duration: 3000,
+                        });
+                        // In a real app, this would open a report dialog
+                      }}
+                    >
+                      <Flag className="h-4 w-4" />
+                      <span>Report User</span>
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Show a visible badge for users raising hand */}
+              {listener.isRaisingHand && (
+                <Badge variant="outline" className="mt-2">
+                  Raised Hand
+                </Badge>
               )}
             </motion.div>
           ))}

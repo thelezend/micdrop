@@ -438,9 +438,13 @@ const RoomClient = ({
           >
             <ListenersList
               listeners={roomData.listeners}
+              currentUserId={currentUserId}
+              isCurrentUserHost={roomData.speakers.some(
+                (s) => s.id === currentUserId && s.isHost
+              )}
               onApproveRaiseHand={
                 roomData.speakers.some(
-                  (s) => s.id === currentUserId && s.isHost,
+                  (s) => s.id === currentUserId && s.isHost
                 )
                   ? handleApproveRaiseHand
                   : undefined
