@@ -3,9 +3,10 @@
 import { RoomCard } from "@/components/room/room-card";
 import { TypographyH1 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { Clock, Plus, TrendingUp, Users } from "lucide-react";
+import { Clock, Plus, Search, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
 
 const container = {
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const [filter, setFilter] = useState<"trending" | "new" | "following">(
     "trending",
   );
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Mock data for rooms
   const rooms = [
@@ -215,18 +217,34 @@ export default function DashboardPage() {
     },
   ];
 
-  // Filter rooms based on selected tab
+  // Filter rooms based on selected tab and search query
   const filteredRooms = rooms.filter((room) => {
-    if (filter === "trending") return true; // All rooms for trending
-    if (filter === "new") return room.id > "4"; // Just an example to show different rooms
-    if (filter === "following") return ["1", "3", "5"].includes(room.id); // Example of followed rooms
-    return true;
+    // First apply tab filter
+    let passesTabFilter = true;
+    if (filter === "trending")
+      passesTabFilter = true; // All rooms for trending
+    else if (filter === "new")
+      passesTabFilter = room.id > "4"; // Just an example to show different rooms
+    else if (filter === "following")
+      passesTabFilter = ["1", "3", "5"].includes(room.id); // Example of followed rooms
+
+    // If search query exists, check if room title or tags match the query
+    if (searchQuery.trim() !== "") {
+      const query = searchQuery.toLowerCase();
+      const titleMatch = room.title.toLowerCase().includes(query);
+      const tagMatch = room.tags.some((tag) =>
+        tag.toLowerCase().includes(query),
+      );
+      return passesTabFilter && (titleMatch || tagMatch);
+    }
+
+    return passesTabFilter;
   });
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex flex-col items-start justify-between md:flex-row md:items-center">
-        <TypographyH1 className="mb-4 text-3xl font-bold md:mb-0">
+      <div className="mb-8 flex flex-col items-center justify-between gap-2 md:flex-row">
+        <TypographyH1 className="text-3xl font-bold md:mb-0">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -235,9 +253,18 @@ export default function DashboardPage() {
             Explore Rooms
           </motion.span>
         </TypographyH1>
+        <div className="flex items-center gap-2">
+          <Search />
+          <Input
+            className="w-80"
+            placeholder="Search rooms by name or tags..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           transition={{
             type: "spring",
             stiffness: 300,
