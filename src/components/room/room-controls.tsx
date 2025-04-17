@@ -1,7 +1,27 @@
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Mic, MicOff, Hand, LogOut } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
+import { Hand, LogOut, Mic, MicOff } from "lucide-react";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20, scale: 0.9 },
+  show: { opacity: 1, y: 0, scale: 1 },
+};
 
 interface RoomControlsProps {
   isMuted: boolean;
@@ -26,68 +46,75 @@ export function RoomControls({
 }: RoomControlsProps) {
   return (
     <TooltipProvider>
-      <motion.div 
-        className="flex items-center justify-center gap-4 p-4 bg-card border rounded-lg shadow-sm"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="flex items-center justify-center gap-4"
       >
         {/* Mute/Unmute button */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant={isMuted ? "outline" : "default"}
-              size="icon"
-              className="h-12 w-12 rounded-full"
-              onClick={onToggleMute}
-            >
-              {isMuted ? (
-                <MicOff className="h-5 w-5" />
-              ) : (
-                <Mic className="h-5 w-5" />
-              )}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{isMuted ? "Unmute" : "Mute"}</p>
-          </TooltipContent>
-        </Tooltip>
-
-        {/* Raise hand button (only for listeners) */}
-        {!isSpeaker && (
+        <motion.div variants={item}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant={isRaisingHand ? "default" : "outline"}
+                variant={isMuted ? "outline" : "default"}
                 size="icon"
-                className="h-12 w-12 rounded-full"
-                onClick={onRaiseHand}
+                className="h-12 w-12 rounded-full duration-200 hover:-translate-y-1"
+                onClick={onToggleMute}
               >
-                <Hand className="h-5 w-5" />
+                {isMuted ? (
+                  <MicOff className="h-5 w-5" />
+                ) : (
+                  <Mic className="h-5 w-5" />
+                )}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{isRaisingHand ? "Lower Hand" : "Raise Hand"}</p>
+              <p>{isMuted ? "Unmute" : "Mute"}</p>
             </TooltipContent>
           </Tooltip>
+        </motion.div>
+
+        {/* Raise hand button (only for listeners) */}
+        {!isSpeaker && (
+          <motion.div variants={item}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={isRaisingHand ? "default" : "outline"}
+                  size="icon"
+                  className="h-12 w-12 rounded-full duration-200 hover:-translate-y-1"
+                  onClick={onRaiseHand}
+                >
+                  <Hand className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isRaisingHand ? "Lower Hand" : "Raise Hand"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </motion.div>
         )}
 
         {/* Leave room button */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="destructive"
-              size="icon"
-              className="h-12 w-12 rounded-full"
-              onClick={onLeaveRoom}
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Leave Room</p>
-          </TooltipContent>
-        </Tooltip>
+        <motion.div variants={item}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="h-12 w-12 rounded-full duration-200 hover:-translate-y-1"
+                onClick={onLeaveRoom}
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Leave Room</p>
+            </TooltipContent>
+          </Tooltip>
+        </motion.div>
       </motion.div>
     </TooltipProvider>
   );

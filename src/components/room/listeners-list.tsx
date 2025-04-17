@@ -1,9 +1,25 @@
-import { UserAvatar } from "@/components/user/avatar";
 import { TypographySmall } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { UserAvatar } from "@/components/user/avatar";
 import { motion } from "framer-motion";
 import { Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import Link from "next/link";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20, scale: 0.9 },
+  show: { opacity: 1, y: 0, scale: 1 },
+};
 
 interface Listener {
   id: string;
@@ -18,83 +34,74 @@ interface ListenersListProps {
 }
 
 /**
- * ListenersList component displays a list of listeners in a voice room
+ * ListenersList component displays a grid of listeners in a voice room
  * Shows listener avatars and indicates if they are raising their hand
+ * Uses a grid layout similar to speakers grid for visual consistency
  */
-export function ListenersList({ listeners, onApproveRaiseHand }: ListenersListProps) {
-  const raisingHands = listeners.filter(listener => listener.isRaisingHand);
-  const regularListeners = listeners.filter(listener => !listener.isRaisingHand);
+export function ListenersList({
+  listeners,
+  onApproveRaiseHand,
+}: ListenersListProps) {
+  // Sort listeners to show those raising hands first
+  const sortedListeners = [...listeners].sort((a, b) => {
+    if (a.isRaisingHand && !b.isRaisingHand) return -1;
+    if (!a.isRaisingHand && b.isRaisingHand) return 1;
+    return 0;
+  });
 
   return (
-    <div className="bg-card rounded-lg border shadow-sm p-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Users className="h-5 w-5 text-muted-foreground" />
-        <TypographySmall className="font-medium">
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="text-muted-foreground h-5 w-5" />
           Listeners ({listeners.length})
-        </TypographySmall>
-      </div>
+        </CardTitle>
+      </CardHeader>
 
-      <ScrollArea className="h-[300px] pr-4">
-        {raisingHands.length > 0 && (
-          <div className="mb-4">
-            <TypographySmall className="text-muted-foreground mb-2">
-              Raising Hand
-            </TypographySmall>
-            <div className="space-y-3">
-              {raisingHands.map((listener) => (
-                <motion.div
-                  key={listener.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-2">
-                    <UserAvatar
-                      src={listener.avatar}
-                      name={listener.name}
-                      size="sm"
-                      isRaisingHand={true}
-                    />
-                    <TypographySmall>{listener.name}</TypographySmall>
-                  </div>
-                  {onApproveRaiseHand && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onApproveRaiseHand(listener.id)}
-                    >
-                      Approve
-                    </Button>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div>
-          <TypographySmall className="text-muted-foreground mb-2">
-            In Room
-          </TypographySmall>
-          <div className="space-y-3">
-            {regularListeners.map((listener) => (
-              <motion.div
-                key={listener.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex items-center gap-2"
+      <CardContent>
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-2 gap-4 p-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
+        >
+          {sortedListeners.map((listener) => (
+            <motion.div
+              key={listener.id}
+              variants={item}
+              className="relative flex flex-col items-center"
+            >
+              <Link
+                href="/profile/johnwick"
+                className="hover:scale-105 hover:underline active:scale-95"
               >
                 <UserAvatar
                   src={listener.avatar}
                   name={listener.name}
-                  size="sm"
+                  size="lg"
+                  isRaisingHand={listener.isRaisingHand}
+                  className="mb-2"
                 />
-                <TypographySmall>{listener.name}</TypographySmall>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </ScrollArea>
-    </div>
+                <TypographySmall className="text-center font-medium">
+                  {listener.name}
+                </TypographySmall>
+              </Link>
+
+              {listener.isRaisingHand && onApproveRaiseHand && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => onApproveRaiseHand(listener.id)}
+                >
+                  Approve
+                </Button>
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </CardContent>
+    </Card>
   );
 }

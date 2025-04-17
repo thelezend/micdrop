@@ -11,5 +11,5 @@ export default async function RoomPage({
 }) {
   const roomId = (await params).id;
 
-  return <RoomClient classname="" roomId={roomId} />;
+  return <RoomClient classname="px-5 md:px-0" roomId={roomId} />;
 }

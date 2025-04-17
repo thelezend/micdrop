@@ -1,6 +1,24 @@
-import { UserAvatar } from "@/components/user/avatar";
 import { TypographySmall } from "@/components/typography";
+import { UserAvatar } from "@/components/user/avatar";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { Badge } from "../ui/badge";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, scale: 0.5 },
+  show: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.5 },
+};
 
 interface Speaker {
   id: string;
@@ -21,35 +39,39 @@ interface SpeakersGridProps {
  */
 export function SpeakersGrid({ speakers }: SpeakersGridProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+    <motion.div
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true }}
+      className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3 md:grid-cols-4"
+    >
       {speakers.map((speaker) => (
         <motion.div
           key={speaker.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.3 }}
+          variants={item}
           className="flex flex-col items-center"
         >
-          <UserAvatar
-            src={speaker.avatar}
-            name={speaker.name}
-            size="lg"
-            showStatus
-            isMuted={speaker.isMuted}
-            isSpeaking={speaker.isSpeaking}
-            className="mb-2"
-          />
-          <TypographySmall className="font-medium text-center">
-            {speaker.name}
-            {speaker.isHost && (
-              <span className="ml-1 px-1.5 py-0.5 bg-primary/10 text-primary text-xs rounded-full">
-                Host
-              </span>
-            )}
-          </TypographySmall>
+          <Link
+            href="/profile/johnwick"
+            className="hover:scale-105 hover:underline active:scale-95"
+          >
+            <UserAvatar
+              src={speaker.avatar}
+              name={speaker.name}
+              size="lg"
+              showStatus
+              isMuted={speaker.isMuted}
+              isSpeaking={speaker.isSpeaking}
+              className="mb-2"
+            />
+            <TypographySmall className="text-center font-medium">
+              {speaker.name}
+            </TypographySmall>
+          </Link>
+          {speaker.isHost && <Badge className="mt-2">Host</Badge>}
         </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

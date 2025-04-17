@@ -1,11 +1,18 @@
+import { TypographyMuted, TypographySmall } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/user/avatar";
-import { TypographySmall, TypographyMuted } from "@/components/typography";
-import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Send } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 interface ChatMessage {
   id: string;
@@ -43,12 +50,12 @@ export function ChatPanel({ messages, onSendMessage }: ChatPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-card rounded-lg border shadow-sm">
-      <div className="p-3 border-b">
-        <TypographySmall className="font-medium">Chat</TypographySmall>
-      </div>
-      
-      <ScrollArea className="flex-1 p-3">
+    <Card>
+      <CardHeader>
+        <CardTitle>Chat</CardTitle>
+      </CardHeader>
+
+      <CardContent className="max-h-screen overflow-auto">
         <AnimatePresence initial={false}>
           {messages.map((message) => (
             <motion.div
@@ -60,51 +67,59 @@ export function ChatPanel({ messages, onSendMessage }: ChatPanelProps) {
               className="mb-4"
             >
               <div className="flex items-start gap-2">
-                <UserAvatar
-                  src={message.userAvatar}
-                  name={message.userName}
-                  size="sm"
-                />
+                <Link
+                  href="/profile/johnwick"
+                  className="hover:scale-105 active:scale-95"
+                >
+                  <UserAvatar
+                    src={message.userAvatar}
+                    name={message.userName}
+                    size="sm"
+                  />
+                </Link>
                 <div>
                   <div className="flex items-baseline gap-2">
-                    <TypographySmall className="font-medium">
-                      {message.userName}
-                    </TypographySmall>
+                    <Link
+                      href="/profile/johnwick"
+                      className="hover:scale-105 hover:underline active:scale-95"
+                    >
+                      <TypographySmall className="font-medium">
+                        {message.userName}
+                      </TypographySmall>
+                    </Link>
                     <TypographyMuted>
                       {formatTime(message.timestamp)}
                     </TypographyMuted>
                   </div>
-                  <p className="text-sm mt-1">{message.content}</p>
+                  <p className="mt-1 text-sm">{message.content}</p>
                 </div>
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
-      </ScrollArea>
-      
-      <div className="p-3 border-t">
-        <div className="flex gap-2">
-          <Input
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            className="flex-1"
-          />
-          <Button
-            size="icon"
-            onClick={handleSendMessage}
-            disabled={!newMessage.trim()}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+
+      <CardFooter className="flex items-center gap-2">
+        <Input
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a message..."
+          className="flex-1"
+        />
+        <Button
+          size="icon"
+          onClick={handleSendMessage}
+          disabled={!newMessage.trim()}
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 
 // Helper function to format timestamp
 function formatTime(date: Date): string {
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

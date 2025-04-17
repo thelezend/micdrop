@@ -4,7 +4,8 @@ import {
   Avatar as UIAvatar,
 } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { Mic, MicOff } from "lucide-react";
+import { Mic, MicOff, Hand } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface AvatarProps {
   src?: string;
@@ -51,7 +52,7 @@ export function UserAvatar({
       <UIAvatar
         className={cn(
           sizeClasses[size],
-          isSpeaking ?? "ring-primary ring-2 ring-offset-2",
+          isSpeaking && "ring-5 ring-purple-500 ring-offset-2",
         )}
       >
         <AvatarImage src={src} alt={name} className="object-cover" />
@@ -69,7 +70,16 @@ export function UserAvatar({
       )}
 
       {isRaisingHand && (
-        <div className="absolute -top-1 -right-1 h-4 w-4 animate-pulse rounded-full bg-yellow-500" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="absolute -top-1 -right-2 animate-pulse rounded-full p-0.5">
+              <Hand className="h-4 w-4 text-white" />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Hand raised</p>
+          </TooltipContent>
+        </Tooltip>
       )}
     </div>
   );

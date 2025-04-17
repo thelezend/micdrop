@@ -41,7 +41,7 @@ const Footer = ({ className }: { className?: string }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className={cn("w-full border-t-2 bg-stone-950", className)}
+      className={cn("w-full border-t-2 dark:bg-stone-950", className)}
     >
       <div className="container mx-auto flex flex-col items-center justify-center gap-4 py-6">
         <motion.div className="flex items-center">

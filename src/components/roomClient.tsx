@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const RoomClient = ({
   classname,
@@ -36,7 +37,7 @@ const RoomClient = ({
       {
         id: "speaker-1",
         name: "Alex Johnson",
-        avatar: undefined,
+        avatar: "/avatars/2.jpg",
         isMuted: false,
         isSpeaking: true,
         isHost: true,
@@ -44,7 +45,7 @@ const RoomClient = ({
       {
         id: "speaker-2",
         name: "Maria Garcia",
-        avatar: undefined,
+        avatar: "/avatars/1.jpg",
         isMuted: true,
         isSpeaking: false,
         isHost: false,
@@ -52,7 +53,7 @@ const RoomClient = ({
       {
         id: "speaker-3",
         name: "David Kim",
-        avatar: undefined,
+        avatar: "/avatars/3.jpg",
         isMuted: false,
         isSpeaking: false,
         isHost: false,
@@ -62,31 +63,31 @@ const RoomClient = ({
       {
         id: "listener-1",
         name: "Sarah Chen",
-        avatar: undefined,
+        avatar: "/avatars/4.jpg",
         isRaisingHand: true,
       },
       {
         id: "listener-2",
         name: "James Wilson",
-        avatar: undefined,
+        avatar: "/avatars/5.jpg",
         isRaisingHand: false,
       },
       {
         id: "listener-3",
         name: "Emma Brown",
-        avatar: undefined,
+        avatar: "/avatars/6.jpg",
         isRaisingHand: false,
       },
       {
         id: "listener-4",
         name: "Michael Davis",
-        avatar: undefined,
+        avatar: "/avatars/7.jpg",
         isRaisingHand: true,
       },
       {
         id: "current-user",
-        name: "You",
-        avatar: undefined,
+        name: "John Wick",
+        avatar: "/avatars/john-wick.png",
         isRaisingHand: isRaisingHand,
       },
     ],
@@ -98,7 +99,7 @@ const RoomClient = ({
       id: "msg-1",
       userId: "speaker-1",
       userName: "Alex Johnson",
-      userAvatar: undefined,
+      userAvatar: "/avatars/2.jpg",
       content:
         "Welcome everyone to our discussion on AI! Feel free to raise your hand if you'd like to join as a speaker.",
       timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
@@ -107,7 +108,7 @@ const RoomClient = ({
       id: "msg-2",
       userId: "listener-2",
       userName: "James Wilson",
-      userAvatar: undefined,
+      userAvatar: "/avatars/5.jpg",
       content:
         "Thanks for hosting this! I'm looking forward to the discussion.",
       timestamp: new Date(Date.now() - 1000 * 60 * 10), // 10 minutes ago
@@ -116,7 +117,7 @@ const RoomClient = ({
       id: "msg-3",
       userId: "speaker-3",
       userName: "David Kim",
-      userAvatar: undefined,
+      userAvatar: "/avatars/3.jpg",
       content:
         "I'm excited to share some insights on recent developments in natural language processing.",
       timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
@@ -219,8 +220,8 @@ const RoomClient = ({
     const newMessage = {
       id: `msg-${Date.now()}`,
       userId: currentUserId,
-      userName: "You",
-      userAvatar: undefined,
+      userName: "johnwick",
+      userAvatar: "/avatars/john-wick.png",
       content,
       timestamp: new Date(),
     };
@@ -288,35 +289,36 @@ const RoomClient = ({
         </TypographyP>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      <div className="flex flex-col gap-6 md:flex-row">
+        <div className="flex flex-2/3 flex-col gap-6">
           {/* Speakers Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-card overflow-hidden rounded-lg border shadow-sm"
           >
-            <div className="border-b p-4">
-              <h2 className="font-semibold">Speakers</h2>
-            </div>
-            <AnimatePresence>
-              <SpeakersGrid speakers={roomData.speakers} />
-            </AnimatePresence>
+            <Card>
+              <CardHeader className="border-b">
+                <CardTitle>Speakers</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <AnimatePresence>
+                  <SpeakersGrid speakers={roomData.speakers} />
+                </AnimatePresence>
+
+                {/* Room Controls */}
+                <RoomControls
+                  isMuted={isMuted}
+                  isRaisingHand={isRaisingHand}
+                  isSpeaker={isSpeaker}
+                  onToggleMute={handleToggleMute}
+                  onRaiseHand={handleRaiseHand}
+                  onLeaveRoom={handleLeaveRoom}
+                />
+              </CardContent>
+            </Card>
           </motion.div>
 
-          {/* Room Controls */}
-          <RoomControls
-            isMuted={isMuted}
-            isRaisingHand={isRaisingHand}
-            isSpeaker={isSpeaker}
-            onToggleMute={handleToggleMute}
-            onRaiseHand={handleRaiseHand}
-            onLeaveRoom={handleLeaveRoom}
-          />
-        </div>
-
-        <div className="space-y-6">
           {/* Listeners Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -334,13 +336,15 @@ const RoomClient = ({
               }
             />
           </motion.div>
+        </div>
 
+        <div className="h-fill flex-1/3 space-y-6">
           {/* Chat Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="h-[400px]"
+            className="h-full overflow-auto"
           >
             <ChatPanel messages={messages} onSendMessage={handleSendMessage} />
           </motion.div>
