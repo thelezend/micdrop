@@ -5,6 +5,7 @@ import { EmojiReactions } from "@/components/room/emoji-reactions";
 import { HostStageBar } from "@/components/room/host-stage-bar";
 import { ListenersList } from "@/components/room/listeners-list";
 import { RoomControls } from "@/components/room/room-controls";
+import { RoomSettingsData } from "@/components/room/room-settings-dialog";
 import { SpeakersGrid } from "@/components/room/speakers-grid";
 import { TypographyH1, TypographyP } from "@/components/typography";
 import {
@@ -218,11 +219,22 @@ const RoomClient = ({
     });
   };
 
-  // Handle open room settings
-  const handleOpenRoomSettings = () => {
-    // In a real app, this would open a settings modal
-    toast.success("Room settings", {
-      description: "This would open a modal to edit room title, privacy, etc.",
+  // Handle save room settings
+  const handleSaveRoomSettings = (settings: RoomSettingsData) => {
+    // Update room data with new settings
+    setRoomData({
+      ...roomData,
+      title: settings.title,
+      description: settings.description,
+    });
+
+    // Set recording state if it changed
+    if (settings.recordingEnabled !== isRecording) {
+      setIsRecording(settings.recordingEnabled);
+    }
+
+    toast.success("Room settings updated", {
+      description: "Your changes have been saved",
       duration: 3000,
     });
   };
@@ -350,10 +362,12 @@ const RoomClient = ({
       {roomData.speakers.some((s) => s.id === currentUserId && s.isHost) && (
         <HostStageBar
           isRecording={isRecording}
+          roomTitle={roomData.title}
+          roomDescription={roomData.description}
           onMuteAll={handleMuteAll}
           onInviteListener={handleInviteListener}
           onToggleRecording={handleToggleRecording}
-          onOpenRoomSettings={handleOpenRoomSettings}
+          onSaveRoomSettings={handleSaveRoomSettings}
         />
       )}
 

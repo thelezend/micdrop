@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { RoomSettingsDialog, RoomSettingsData } from "@/components/room/room-settings-dialog";
 import {
   Tooltip,
   TooltipContent,
@@ -6,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
-import { Camera, Mic, Plus, Settings } from "lucide-react";
+import { Camera, Mic, Plus } from "lucide-react";
 
 const container = {
   hidden: { opacity: 0 },
@@ -25,10 +26,12 @@ const item = {
 
 interface HostStageBarProps {
   isRecording: boolean;
+  roomTitle: string;
+  roomDescription: string;
   onMuteAll: () => void;
   onInviteListener: () => void;
   onToggleRecording: () => void;
-  onOpenRoomSettings: () => void;
+  onSaveRoomSettings: (settings: RoomSettingsData) => void;
 }
 
 /**
@@ -37,10 +40,12 @@ interface HostStageBarProps {
  */
 export function HostStageBar({
   isRecording,
+  roomTitle,
+  roomDescription,
   onMuteAll,
   onInviteListener,
   onToggleRecording,
-  onOpenRoomSettings,
+  onSaveRoomSettings,
 }: HostStageBarProps) {
   return (
     <TooltipProvider>
@@ -108,18 +113,22 @@ export function HostStageBar({
           </Tooltip>
         </motion.div>
 
-        {/* Room Settings button */}
+        {/* Room Settings Dialog */}
         <motion.div variants={item}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-12 w-12 rounded-full duration-200 hover:-translate-y-1"
-                onClick={onOpenRoomSettings}
-              >
-                <Settings className="h-5 w-5" />
-              </Button>
+              <span>  {/* Wrapper span since DialogTrigger already provides a button */}
+                <RoomSettingsDialog
+                  initialSettings={{
+                    title: roomTitle,
+                    description: roomDescription,
+                    isPrivate: false,
+                    maxSpeakers: 10,
+                    recordingEnabled: isRecording,
+                  }}
+                  onSaveSettings={onSaveRoomSettings}
+                />
+              </span>
             </TooltipTrigger>
             <TooltipContent>
               <p>Room Settings (Title, Privacy, etc.)</p>
