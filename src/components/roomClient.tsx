@@ -1,6 +1,8 @@
 "use client";
 
 import { ChatPanel } from "@/components/room/chat-panel";
+import { EmojiReactions } from "@/components/room/emoji-reactions";
+import { HostStageBar } from "@/components/room/host-stage-bar";
 import { ListenersList } from "@/components/room/listeners-list";
 import { RoomControls } from "@/components/room/room-controls";
 import { SpeakersGrid } from "@/components/room/speakers-grid";
@@ -24,6 +26,15 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
+// Type definition for emoji reaction events
+type EmojiReaction = {
+  id: string;
+  userId: string;
+  userName: string;
+  emoji: string;
+  timestamp: Date;
+};
+
 const RoomClient = ({
   classname,
   roomId,
@@ -37,6 +48,7 @@ const RoomClient = ({
   const [isMuted, setIsMuted] = useState(true);
   const [isRaisingHand, setIsRaisingHand] = useState(false);
   const [isSpeaker, setIsSpeaker] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [currentUserId] = useState("current-user"); // Mock current user ID
 
   // Room data (from mock data service)
@@ -44,6 +56,11 @@ const RoomClient = ({
 
   // Chat messages (from mock data service)
   const [messages, setMessages] = useState<Message[]>(getMockMessages());
+
+  // Reactions (only needed for broadcasting to other users in a real app)
+  // This state isn't directly used in our UI but would be used with WebSockets in a real app
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [reactions, setReactions] = useState<EmojiReaction[]>([]);
 
   // Handle toggle mute for current user
   const handleToggleMute = () => {
@@ -159,6 +176,57 @@ const RoomClient = ({
     router.push("/dashboard");
   };
 
+  // Handle mute all (host only)
+  const handleMuteAll = () => {
+    // Update all speakers to be muted
+    const updatedSpeakers = roomData.speakers.map((speaker) => ({
+      ...speaker,
+      isMuted: true,
+    }));
+
+    setRoomData({
+      ...roomData,
+      speakers: updatedSpeakers,
+    });
+
+    // Update current user's mute state if they're a speaker
+    if (isSpeaker) {
+      setIsMuted(true);
+    }
+
+    toast.success("All speakers have been muted", {
+      duration: 2000,
+    });
+  };
+
+  // Handle invite listener to stage
+  const handleInviteListener = () => {
+    // In a real app, this would open a modal to select listeners or generate an invite link
+    toast.success("Invitation functionality", {
+      description:
+        "This would open a selection modal or generate a sharable link",
+      duration: 3000,
+    });
+  };
+
+  // Handle toggle room recording
+  const handleToggleRecording = () => {
+    setIsRecording(!isRecording);
+
+    toast.success(isRecording ? "Recording stopped" : "Recording started", {
+      duration: 2000,
+    });
+  };
+
+  // Handle open room settings
+  const handleOpenRoomSettings = () => {
+    // In a real app, this would open a settings modal
+    toast.success("Room settings", {
+      description: "This would open a modal to edit room title, privacy, etc.",
+      duration: 3000,
+    });
+  };
+
   // Handle approve raise hand
   const handleApproveRaiseHand = (listenerId: string) => {
     // Use the utility function from room-data.ts
@@ -196,6 +264,39 @@ const RoomClient = ({
     };
 
     setMessages((prev) => [...prev, newMessage]);
+  };
+
+  // Handle sending emoji reactions
+  const handleSendReaction = (emoji: string) => {
+    // Find the current user's name
+    let userName = "johnwick";
+    const userInSpeakers = roomData.speakers.find(
+      (s) => s.id === currentUserId,
+    );
+    const userInListeners = roomData.listeners.find(
+      (l) => l.id === currentUserId,
+    );
+
+    if (userInSpeakers) {
+      userName = userInSpeakers.name;
+    } else if (userInListeners) {
+      userName = userInListeners.name;
+    }
+
+    // Create the reaction object
+    const newReaction: EmojiReaction = {
+      id: `reaction-${Date.now()}`,
+      userId: currentUserId,
+      userName,
+      emoji,
+      timestamp: new Date(),
+    };
+
+    // Add to reactions (in a real app, this would be broadcast to other users)
+    setReactions((prev) => [...prev, newReaction]);
+
+    // In a real app with WebSockets, you would broadcast this reaction to all users
+    // For now, we'll just use the local display handled by the EmojiReactions component
   };
 
   // Simulate a new message coming in occasionally
@@ -245,6 +346,17 @@ const RoomClient = ({
 
   return (
     <div className={cn("container mx-auto py-8", classname)}>
+      {/* Show host stage bar if current user is a host */}
+      {roomData.speakers.some((s) => s.id === currentUserId && s.isHost) && (
+        <HostStageBar
+          isRecording={isRecording}
+          onMuteAll={handleMuteAll}
+          onInviteListener={handleInviteListener}
+          onToggleRecording={handleToggleRecording}
+          onOpenRoomSettings={handleOpenRoomSettings}
+        />
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -285,15 +397,21 @@ const RoomClient = ({
                   />
                 </AnimatePresence>
 
-                {/* Room Controls */}
-                <RoomControls
-                  isMuted={isMuted}
-                  isRaisingHand={isRaisingHand}
-                  isSpeaker={isSpeaker}
-                  onToggleMute={handleToggleMute}
-                  onRaiseHand={handleRaiseHand}
-                  onLeaveRoom={handleLeaveRoom}
-                />
+                {/* Controls row - contains room controls and emoji reactions */}
+                <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                  {/* Emoji Reactions */}
+                  <EmojiReactions onSendReaction={handleSendReaction} />
+
+                  {/* Room Controls */}
+                  <RoomControls
+                    isMuted={isMuted}
+                    isRaisingHand={isRaisingHand}
+                    isSpeaker={isSpeaker}
+                    onToggleMute={handleToggleMute}
+                    onRaiseHand={handleRaiseHand}
+                    onLeaveRoom={handleLeaveRoom}
+                  />
+                </div>
               </CardContent>
             </Card>
           </motion.div>
