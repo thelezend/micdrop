@@ -24,6 +24,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/user/avatar";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { capitalCase } from "change-case";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -112,7 +113,7 @@ export default function SettingsPage() {
   // Handle profile form submission
   function onSubmit(data: ProfileFormValues) {
     console.log("Profile form submitted:", data);
-    toast("Profile updated successfully");
+    toast.success("Profile updated successfully");
   }
 
   // Handle notification toggle
@@ -121,15 +122,15 @@ export default function SettingsPage() {
       ...prev,
       [key]: !prev[key],
     }));
-    toast(
-      `${key} notifications ${notificationSettings[key] ? "disabled" : "enabled"}`,
+    toast.success(
+      `${capitalCase(key)} notifications ${notificationSettings[key] ? "disabled" : "enabled"}`,
     );
   }
 
   // Handle theme change
   function handleThemeChange(newTheme: string) {
     setTheme(newTheme);
-    toast(`Theme changed to ${newTheme}`);
+    toast.success(`Theme changed to ${newTheme}`);
   }
 
   return (

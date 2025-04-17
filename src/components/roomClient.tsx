@@ -128,7 +128,7 @@ const RoomClient = ({
   const handleToggleMute = () => {
     setIsMuted(!isMuted);
 
-    toast(isMuted ? "Microphone unmuted" : "Microphone muted", {
+    toast.success(isMuted ? "Microphone unmuted" : "Microphone muted", {
       duration: 2000,
     });
 
@@ -149,7 +149,7 @@ const RoomClient = ({
   const handleRaiseHand = () => {
     setIsRaisingHand(!isRaisingHand);
 
-    toast(isRaisingHand ? "Hand lowered" : "Hand raised", {
+    toast.success(isRaisingHand ? "Hand lowered" : "Hand raised", {
       description: isRaisingHand
         ? ""
         : "The host will be notified of your request to speak",
@@ -169,7 +169,7 @@ const RoomClient = ({
 
   // Handle leave room
   const handleLeaveRoom = () => {
-    toast("Left the room", {
+    toast.success("Left the room", {
       duration: 2000,
     });
 
@@ -204,7 +204,7 @@ const RoomClient = ({
       listeners: updatedListeners,
     }));
 
-    toast(`${listener.name} is now a speaker`, {
+    toast.success(`${listener.name} is now a speaker`, {
       duration: 3000,
     });
 

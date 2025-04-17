@@ -135,13 +135,13 @@ export default function ProfileClient({ username }: { username: string }) {
   // Handle follow/unfollow
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
-    toast(isFollowing ? "Unfollowed user" : "Following user");
+    toast.success(isFollowing ? "Unfollowed user" : "Following user");
   };
 
   // Handle follow/unfollow for network users
   const handleNetworkFollow = () => {
     // In a real app, this would update the state of the specific user
-    toast(`User follow status updated`);
+    toast.success(`User follow status updated`);
   };
 
   return (

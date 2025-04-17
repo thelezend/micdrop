@@ -40,7 +40,7 @@ export default function RootLayout({
           <Navigation />
           <main className="min-h-screen">{children}</main>
           <Footer />
-          <Toaster />
+          <Toaster closeButton={true} />
         </ThemeProvider>
       </body>
     </html>
