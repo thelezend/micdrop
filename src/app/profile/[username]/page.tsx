@@ -8,9 +8,9 @@ import ProfileClient from "@/components/profileClient";
 export default async function ProfilePage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const { username } = params;
+  const { username } = await params;
 
   return <ProfileClient username={username} />;
 }
