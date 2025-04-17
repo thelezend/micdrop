@@ -5,6 +5,18 @@ import { ListenersList } from "@/components/room/listeners-list";
 import { RoomControls } from "@/components/room/room-controls";
 import { SpeakersGrid } from "@/components/room/speakers-grid";
 import { TypographyH1, TypographyP } from "@/components/typography";
+import {
+  approveRaisedHand,
+  getMockMessages,
+  getMockRoomData,
+  getRandomMessage as getRandomMessageFromLib,
+  makeSpeakerCoHost,
+  removeSpeakerFromStage,
+  toggleRaisedHand,
+  toggleSpeakerMute,
+  type Message,
+  type RoomData,
+} from "@/lib/room-data";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -27,104 +39,13 @@ const RoomClient = ({
   const [isSpeaker, setIsSpeaker] = useState(false);
   const [currentUserId] = useState("current-user"); // Mock current user ID
 
-  // Room data (mock)
-  const [roomData, setRoomData] = useState({
-    id: roomId,
-    title: "Tech Talk: The Future of AI",
-    description:
-      "Join us for a discussion on the latest developments in artificial intelligence and what the future holds.",
-    speakers: [
-      {
-        id: "speaker-1",
-        name: "Alex Johnson",
-        avatar: "/avatars/2.jpg",
-        isMuted: false,
-        isSpeaking: true,
-        isHost: true,
-      },
-      {
-        id: "speaker-2",
-        name: "Maria Garcia",
-        avatar: "/avatars/1.jpg",
-        isMuted: true,
-        isSpeaking: false,
-        isHost: false,
-      },
-      {
-        id: "speaker-3",
-        name: "David Kim",
-        avatar: "/avatars/3.jpg",
-        isMuted: false,
-        isSpeaking: false,
-        isHost: false,
-      },
-    ],
-    listeners: [
-      {
-        id: "listener-1",
-        name: "Sarah Chen",
-        avatar: "/avatars/4.jpg",
-        isRaisingHand: true,
-      },
-      {
-        id: "listener-2",
-        name: "James Wilson",
-        avatar: "/avatars/5.jpg",
-        isRaisingHand: false,
-      },
-      {
-        id: "listener-3",
-        name: "Emma Brown",
-        avatar: "/avatars/6.jpg",
-        isRaisingHand: false,
-      },
-      {
-        id: "listener-4",
-        name: "Michael Davis",
-        avatar: "/avatars/7.jpg",
-        isRaisingHand: true,
-      },
-      {
-        id: "current-user",
-        name: "John Wick",
-        avatar: "/avatars/john-wick.png",
-        isRaisingHand: isRaisingHand,
-      },
-    ],
-  });
+  // Room data (from mock data service)
+  const [roomData, setRoomData] = useState<RoomData>(getMockRoomData(roomId));
 
-  // Chat messages (mock)
-  const [messages, setMessages] = useState([
-    {
-      id: "msg-1",
-      userId: "speaker-1",
-      userName: "Alex Johnson",
-      userAvatar: "/avatars/2.jpg",
-      content:
-        "Welcome everyone to our discussion on AI! Feel free to raise your hand if you'd like to join as a speaker.",
-      timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-    },
-    {
-      id: "msg-2",
-      userId: "listener-2",
-      userName: "James Wilson",
-      userAvatar: "/avatars/5.jpg",
-      content:
-        "Thanks for hosting this! I'm looking forward to the discussion.",
-      timestamp: new Date(Date.now() - 1000 * 60 * 10), // 10 minutes ago
-    },
-    {
-      id: "msg-3",
-      userId: "speaker-3",
-      userName: "David Kim",
-      userAvatar: "/avatars/3.jpg",
-      content:
-        "I'm excited to share some insights on recent developments in natural language processing.",
-      timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-    },
-  ]);
+  // Chat messages (from mock data service)
+  const [messages, setMessages] = useState<Message[]>(getMockMessages());
 
-  // Handle toggle mute
+  // Handle toggle mute for current user
   const handleToggleMute = () => {
     setIsMuted(!isMuted);
 
@@ -134,15 +55,82 @@ const RoomClient = ({
 
     // Update current user in speakers list if they're a speaker
     if (isSpeaker) {
-      setRoomData((prev) => ({
-        ...prev,
-        speakers: prev.speakers.map((speaker) =>
-          speaker.id === currentUserId
-            ? { ...speaker, isMuted: !isMuted }
-            : speaker,
-        ),
-      }));
+      // Use the utility function from room-data.ts
+      const { updatedRoomData } = toggleSpeakerMute(roomData, currentUserId);
+      setRoomData(updatedRoomData);
     }
+  };
+
+  // Handle toggle mute for any speaker
+  const handleToggleSpeakerMute = (speakerId: string) => {
+    // Use the utility function from room-data.ts
+    const { updatedRoomData, speaker, newMuteState } = toggleSpeakerMute(
+      roomData,
+      speakerId,
+    );
+
+    // If speaker not found, return early
+    if (!speaker) return;
+
+    // Update room data
+    setRoomData(updatedRoomData);
+
+    // Show toast notification
+    toast.success(
+      newMuteState
+        ? `${speaker.name} has been muted`
+        : `${speaker.name} has been unmuted`,
+      { duration: 2000 },
+    );
+
+    // If this is the current user, also update the isMuted state
+    if (speakerId === currentUserId) {
+      setIsMuted(newMuteState);
+    }
+  };
+
+  // Handle adjust volume for a speaker
+  const handleAdjustSpeakerVolume = (speakerId: string, volume: number) => {
+    // In a real app, this would adjust the audio volume for this speaker
+    console.log(`Adjusting volume for ${speakerId} to ${volume}%`);
+
+    // Show toast notification
+    toast.success(`Volume adjusted to ${volume}%`, { duration: 1500 });
+  };
+
+  // Handle make co-host
+  const handleMakeCoHost = (speakerId: string) => {
+    // Use the utility function from room-data.ts
+    const { updatedRoomData, speaker } = makeSpeakerCoHost(roomData, speakerId);
+
+    // If speaker not found, return early
+    if (!speaker) return;
+
+    // Update room data
+    setRoomData(updatedRoomData);
+
+    // Show toast notification
+    toast.success(`${speaker.name} is now a co-host`, { duration: 2000 });
+  };
+
+  // Handle remove from stage
+  const handleRemoveFromStage = (speakerId: string) => {
+    // Use the utility function from room-data.ts
+    const { updatedRoomData, speaker } = removeSpeakerFromStage(
+      roomData,
+      speakerId,
+    );
+
+    // If speaker not found, return early
+    if (!speaker) return;
+
+    // Update room data
+    setRoomData(updatedRoomData);
+
+    // Show toast notification
+    toast.success(`${speaker.name} has been moved to the audience`, {
+      duration: 2000,
+    });
   };
 
   // Handle raise hand
@@ -156,15 +144,9 @@ const RoomClient = ({
       duration: 3000,
     });
 
-    // Update current user in listeners list
-    setRoomData((prev) => ({
-      ...prev,
-      listeners: prev.listeners.map((listener) =>
-        listener.id === currentUserId
-          ? { ...listener, isRaisingHand: !isRaisingHand }
-          : listener,
-      ),
-    }));
+    // Find the current user in the listeners list and toggle their raised hand status
+    const { updatedRoomData } = toggleRaisedHand(roomData, currentUserId);
+    setRoomData(updatedRoomData);
   };
 
   // Handle leave room
@@ -179,30 +161,17 @@ const RoomClient = ({
 
   // Handle approve raise hand
   const handleApproveRaiseHand = (listenerId: string) => {
-    // Find the listener
-    const listener = roomData.listeners.find((l) => l.id === listenerId);
-    if (!listener) return;
-
-    // Remove from listeners
-    const updatedListeners = roomData.listeners.filter(
-      (l) => l.id !== listenerId,
+    // Use the utility function from room-data.ts
+    const { updatedRoomData, listener } = approveRaisedHand(
+      roomData,
+      listenerId,
     );
 
-    // Add to speakers
-    const newSpeaker = {
-      id: listenerId,
-      name: listener.name,
-      avatar: listener.avatar,
-      isMuted: true,
-      isSpeaking: false,
-      isHost: false,
-    };
+    // If listener not found, return early
+    if (!listener) return;
 
-    setRoomData((prev) => ({
-      ...prev,
-      speakers: [...prev.speakers, newSpeaker],
-      listeners: updatedListeners,
-    }));
+    // Update room data
+    setRoomData(updatedRoomData);
 
     toast.success(`${listener.name} is now a speaker`, {
       duration: 3000,
@@ -303,7 +272,17 @@ const RoomClient = ({
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
                 <AnimatePresence>
-                  <SpeakersGrid speakers={roomData.speakers} />
+                  <SpeakersGrid
+                    speakers={roomData.speakers}
+                    currentUserId={currentUserId}
+                    isCurrentUserHost={roomData.speakers.some(
+                      (s) => s.id === currentUserId && s.isHost,
+                    )}
+                    onToggleMute={handleToggleSpeakerMute}
+                    onAdjustVolume={handleAdjustSpeakerVolume}
+                    onMakeCoHost={handleMakeCoHost}
+                    onRemoveFromStage={handleRemoveFromStage}
+                  />
                 </AnimatePresence>
 
                 {/* Room Controls */}
@@ -354,22 +333,9 @@ const RoomClient = ({
   );
 };
 
-// Helper function to generate random messages
-const getRandomMessage = (): string => {
-  const messages = [
-    "I think AI will transform healthcare in the next decade.",
-    "Has anyone looked into the latest research on transformer models?",
-    "What are your thoughts on AI regulation?",
-    "I'm curious about how AI will impact creative industries.",
-    "The ethical implications of AI are something we need to discuss more.",
-    "I've been working with GPT models recently and the progress is impressive.",
-    "Does anyone have experience with reinforcement learning?",
-    "I'd love to hear more about AI applications in sustainability.",
-    "What do you all think about the future of work with increasing AI adoption?",
-    "Are there any good resources you'd recommend for learning about AI safety?",
-  ];
-
-  return messages[Math.floor(Math.random() * messages.length)];
+// Helper function to generate random messages - using imported function from room-data.ts
+const getRandomMessage = () => {
+  return getRandomMessageFromLib();
 };
 
 export default RoomClient;
