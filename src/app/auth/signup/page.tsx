@@ -1,5 +1,6 @@
 "use client";
 
+import BrandText from "@/components/brand-text";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,168 +10,163 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Mic } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { MicVocal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-/**
- * Signup form schema with validation
- */
-const signupFormSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters" })
-      .max(20, { message: "Username must be less than 20 characters" })
-      .regex(/^[a-zA-Z0-9_]+$/, {
-        message: "Username can only contain letters, numbers, and underscores",
-      }),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    password: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters" }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type SignupFormValues = z.infer<typeof signupFormSchema>;
+import { useState } from "react";
 
 /**
  * Signup page component
  */
 export default function SignupPage() {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Initialize form with validation
-  const form = useForm<SignupFormValues>({
-    resolver: zodResolver(signupFormSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-  // Handle form submission (mock)
-  function onSubmit(data: SignupFormValues) {
-    console.log("Signup form submitted:", data);
-    // In a real app, this would call an API to create the user
-    // For now, just redirect to dashboard
+  // Handle form submission - just redirect to dashboard
+  function handleCreateAccount(e: React.FormEvent) {
+    e.preventDefault();
+    console.log("Redirecting to dashboard");
     router.push("/dashboard");
   }
 
+  // Animation variants for container fade-in from top
+  const containerVariants = {
+    hidden: { opacity: 0, y: -50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  // Animation variants for children elements (pop effect)
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      },
+    },
+  };
+
   return (
     <div className="container mx-auto max-w-md px-4 py-16">
-      <div className="mb-8 flex items-center justify-center gap-2">
-        <Mic className="text-primary h-8 w-8" />
-        <h1 className="from-primary to-secondary bg-gradient-to-r bg-clip-text text-3xl font-bold text-transparent">
-          MicDrop
-        </h1>
-      </div>
+      <motion.div
+        className="mb-5 flex items-center justify-center text-center"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <MicVocal className="h-8 w-8 rotate-180" />
+        <BrandText className="text-5xl lg:text-5xl">MicDrop</BrandText>
+      </motion.div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">
-            Create an Account
-          </CardTitle>
-          <CardDescription className="text-center">
-            Join MicDrop to start conversations that matter
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="yourusername" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="you@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="mt-6 w-full">
-                Create Account
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-2">
-          <div className="text-muted-foreground text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/dashboard" className="text-primary hover:underline">
-              Sign in
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+      <AnimatePresence>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <Card>
+            <CardHeader>
+              <motion.div variants={itemVariants}>
+                <CardTitle className="text-center text-2xl">
+                  Create an Account
+                </CardTitle>
+                <CardDescription className="text-center">
+                  Join MicDrop to start conversations that matter
+                </CardDescription>
+              </motion.div>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleCreateAccount} className="space-y-4">
+                <motion.div className="space-y-2" variants={itemVariants}>
+                  <label htmlFor="username" className="text-sm font-medium">
+                    Username
+                  </label>
+                  <Input
+                    id="username"
+                    placeholder="yourusername"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </motion.div>
+                <motion.div className="space-y-2" variants={itemVariants}>
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </motion.div>
+                <motion.div className="space-y-2" variants={itemVariants}>
+                  <label htmlFor="password" className="text-sm font-medium">
+                    Password
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </motion.div>
+                <motion.div className="space-y-2" variants={itemVariants}>
+                  <label
+                    htmlFor="confirmPassword"
+                    className="text-sm font-medium"
+                  >
+                    Confirm Password
+                  </label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                  <Button type="submit" className="mt-6 w-full">
+                    Create Account
+                  </Button>
+                </motion.div>
+              </form>
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-2">
+              <motion.div
+                className="text-muted-foreground text-center text-sm"
+                variants={itemVariants}
+              >
+                Already have an account?{" "}
+                <Link
+                  href="/dashboard"
+                  className="text-primary hover:underline"
+                >
+                  Sign in
+                </Link>
+              </motion.div>
+            </CardFooter>
+          </Card>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
