@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/user/avatar";
+import { fadeInView, popIn } from "@/lib/animations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { capitalCase } from "change-case";
 import { motion } from "framer-motion";
@@ -140,11 +141,7 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="space-y-6 md:col-span-2">
           {/* Profile Settings */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div {...fadeInView()}>
             <Card>
               <CardHeader>
                 <CardTitle>Profile Information</CardTitle>
@@ -164,16 +161,7 @@ export default function SettingsPage() {
                         name={form.getValues("displayName")}
                         size="lg"
                       />
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 15,
-                          delay: 0.2,
-                        }}
-                      >
+                      <motion.div {...popIn(0.2)}>
                         <Button variant="outline">Change Avatar</Button>
                       </motion.div>
                     </div>
@@ -303,16 +291,7 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 15,
-                        delay: 0.2,
-                      }}
-                    >
+                    <motion.div {...popIn(0.4)}>
                       <Button type="submit">Save Changes</Button>
                     </motion.div>
                   </form>
@@ -322,11 +301,7 @@ export default function SettingsPage() {
           </motion.div>
 
           {/* Notification Settings */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
+          <motion.div {...fadeInView()}>
             <Card>
               <CardHeader>
                 <CardTitle>Notification Preferences</CardTitle>
@@ -408,11 +383,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Theme Settings */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-        >
+        <motion.div {...fadeInView()}>
           <Card>
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
@@ -425,14 +396,7 @@ export default function SettingsPage() {
                 <div>
                   <h4 className="mb-3 font-medium">Theme</h4>
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 15,
-                      delay: 0.5,
-                    }}
+                    {...popIn(0.4)}
                     className="grid grid-cols-2 gap-2"
                   >
                     {mounted ? (
