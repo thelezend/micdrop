@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { childFadeInView, parentContainerFadeInView } from "@/lib/animations";
 import { AnimatePresence, motion } from "framer-motion";
 import { MicVocal } from "lucide-react";
 import Link from "next/link";
@@ -34,35 +35,6 @@ export default function SignupPage() {
     router.push("/dashboard");
   }
 
-  // Animation variants for container fade-in from top
-  const containerVariants = {
-    hidden: { opacity: 0, y: -50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        when: "beforeChildren",
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  // Animation variants for children elements (pop effect)
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      },
-    },
-  };
-
   return (
     <div className="container mx-auto max-w-md px-4 py-16">
       <motion.div
@@ -76,14 +48,10 @@ export default function SignupPage() {
       </motion.div>
 
       <AnimatePresence>
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-        >
+        <motion.div {...parentContainerFadeInView(0.1)}>
           <Card>
             <CardHeader>
-              <motion.div variants={itemVariants}>
+              <motion.div {...childFadeInView}>
                 <CardTitle className="text-center text-2xl">
                   Create an Account
                 </CardTitle>
@@ -94,7 +62,7 @@ export default function SignupPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleCreateAccount} className="space-y-4">
-                <motion.div className="space-y-2" variants={itemVariants}>
+                <motion.div className="space-y-2" {...childFadeInView}>
                   <label htmlFor="username" className="text-sm font-medium">
                     Username
                   </label>
@@ -105,7 +73,7 @@ export default function SignupPage() {
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </motion.div>
-                <motion.div className="space-y-2" variants={itemVariants}>
+                <motion.div className="space-y-2" {...childFadeInView}>
                   <label htmlFor="email" className="text-sm font-medium">
                     Email
                   </label>
@@ -116,7 +84,7 @@ export default function SignupPage() {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </motion.div>
-                <motion.div className="space-y-2" variants={itemVariants}>
+                <motion.div className="space-y-2" {...childFadeInView}>
                   <label htmlFor="password" className="text-sm font-medium">
                     Password
                   </label>
@@ -128,7 +96,7 @@ export default function SignupPage() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </motion.div>
-                <motion.div className="space-y-2" variants={itemVariants}>
+                <motion.div className="space-y-2" {...childFadeInView}>
                   <label
                     htmlFor="confirmPassword"
                     className="text-sm font-medium"
@@ -143,7 +111,7 @@ export default function SignupPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </motion.div>
-                <motion.div variants={itemVariants}>
+                <motion.div {...childFadeInView}>
                   <Button type="submit" className="mt-6 w-full">
                     Create Account
                   </Button>
@@ -153,7 +121,7 @@ export default function SignupPage() {
             <CardFooter className="flex flex-col space-y-2">
               <motion.div
                 className="text-muted-foreground text-center text-sm"
-                variants={itemVariants}
+                {...childFadeInView}
               >
                 Already have an account?{" "}
                 <Link

@@ -1,24 +1,14 @@
 "use client";
 
-import { RoomCard } from "@/components/room/room-card";
 import { CreateRoomDialog } from "@/components/room/create-room-dialog";
+import { RoomCard } from "@/components/room/room-card";
 import { TypographyH1 } from "@/components/typography";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { fadeInView } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { Clock, Search, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3, // Add delay before starting children animations
-    },
-  },
-};
 
 /**
  * Dashboard page component
@@ -244,27 +234,12 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 flex flex-col items-center justify-between gap-2 md:flex-row">
-        <TypographyH1 className="text-3xl font-bold md:mb-0">
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+        <motion.span {...fadeInView()}>
+          <TypographyH1 className="text-3xl font-bold md:mb-0">
             Explore Rooms
-          </motion.span>
-        </TypographyH1>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-            delay: 0.5,
-          }}
-          viewport={{ once: true }}
-          className="flex items-center gap-2"
-        >
+          </TypographyH1>
+        </motion.span>
+        <motion.div {...fadeInView(0.5)} className="flex items-center gap-2">
           <Search />
           <Input
             className="w-80"
@@ -277,16 +252,7 @@ export default function DashboardPage() {
       </div>
 
       <Tabs defaultValue="trending" className="mb-8">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-          }}
-          viewport={{ once: true }}
-        >
+        <motion.div {...fadeInView(0.1)}>
           <TabsList className="mb-8 grid w-full grid-cols-3">
             <TabsTrigger
               value="trending"
@@ -317,10 +283,7 @@ export default function DashboardPage() {
 
         <TabsContent value="trending" className="mt-0">
           <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+            {...fadeInView()}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {filteredRooms.map((room) => (
@@ -330,10 +293,7 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent value="new" className="mt-0">
           <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+            {...fadeInView()}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {filteredRooms.map((room) => (
@@ -343,10 +303,7 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent value="following" className="mt-0">
           <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+            {...fadeInView()}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {filteredRooms.map((room) => (

@@ -113,7 +113,7 @@ export function TrendingRooms() {
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <motion.div {...fadeInView}>
+          <motion.div {...fadeInView()}>
             <TypographyH2 className="border-none text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Trending on{" "}
               <BrandText className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">
@@ -122,8 +122,7 @@ export function TrendingRooms() {
             </TypographyH2>
           </motion.div>
           <motion.p
-            {...fadeInView}
-            transition={{ delay: 0.2 }}
+            {...fadeInView(0.2)}
             className="mt-4 text-gray-500 md:text-xl dark:text-gray-400"
           >
             Join the hottest conversations and connect with passionate voices
@@ -131,7 +130,7 @@ export function TrendingRooms() {
           </motion.p>
         </div>
 
-        <motion.div {...fadeInView}>
+        <motion.div {...fadeInView()}>
           <InfiniteMovingCards
             items={trendingRooms}
             direction="left"

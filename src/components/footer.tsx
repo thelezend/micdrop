@@ -28,7 +28,7 @@ const Footer = ({ className }: { className?: string }) => {
 
   return (
     <motion.footer
-      {...fadeInView}
+      {...fadeInView()}
       className={cn("w-full border-t-2 dark:bg-stone-950", className)}
     >
       <div className="container mx-auto flex flex-col items-center justify-center gap-4 py-6">
@@ -38,7 +38,7 @@ const Footer = ({ className }: { className?: string }) => {
         </motion.div>
 
         <motion.div
-          {...parentContainerFadeInView}
+          {...parentContainerFadeInView()}
           className="flex items-center space-x-4"
         >
           {socialLinks.map((social, index) => {
@@ -66,8 +66,7 @@ const Footer = ({ className }: { className?: string }) => {
         </motion.div>
 
         <motion.span
-          {...fadeInView}
-          transition={{ delay: 0.8 }}
+          {...fadeInView(1.2)}
           className="text-center text-sm text-gray-500"
         >
           © 2025 Micdrop. All rights reserved. <br />

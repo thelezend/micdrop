@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { popFromLeft, popFromRight } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { Mic, Users } from "lucide-react";
 import Link from "next/link";
@@ -50,15 +51,7 @@ export function RoomCard({
           </CardTitle>
           {isLive && (
             <motion.span
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 15,
-                delay: 1,
-              }}
-              viewport={{ once: true }}
+              {...popFromRight(1)}
               className="flex items-center rounded-full bg-red-500 px-2 py-1 text-xs font-semibold text-white"
             >
               <span className="mr-1 h-2 w-2 animate-pulse rounded-full bg-white"></span>
@@ -82,18 +75,7 @@ export function RoomCard({
       </CardContent>
 
       <CardFooter className="flex justify-between pt-0">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-            delay: 0.3,
-          }}
-          viewport={{ once: true }}
-          className="flex items-center gap-6"
-        >
+        <motion.div {...popFromLeft(0.4)} className="flex items-center gap-6">
           <div className="flex items-center">
             <Mic className="text-primary mr-1 h-4 w-4" />
             <MultiTooltip items={speakers} />
@@ -103,17 +85,7 @@ export function RoomCard({
             <TypographySmall>{listenersCount}</TypographySmall>
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-            delay: 0.3,
-          }}
-          viewport={{ once: true }}
-        >
+        <motion.div {...popFromRight(0.4)}>
           <Button asChild size="sm">
             <Link href={`/dashboard/room/${id}`}>Join</Link>
           </Button>

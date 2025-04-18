@@ -64,14 +64,14 @@ const Hero = ({ className }: { className?: string }) => {
       </div>
 
       {/* Sub heading */}
-      <motion.div {...fadeIn} transition={{ delay: 2, ...fadeIn.transition }}>
+      <motion.div {...fadeIn(2)}>
         <TypographyH2 className="border-b-0 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           Voice based social conversations in real time
         </TypographyH2>
       </motion.div>
 
       {/* Description */}
-      <motion.div {...fadeIn} transition={{ delay: 2.2, ...fadeIn.transition }}>
+      <motion.div {...fadeIn(2.3)}>
         <TypographyP className="text-muted-foreground max-w-2xl text-center">
           Join live audio rooms, connect with like-minded people, and share your
           thoughts on topics that matter to you. No pressure - just authentic
@@ -80,7 +80,7 @@ const Hero = ({ className }: { className?: string }) => {
       </motion.div>
 
       {/* Button */}
-      <motion.div {...popIn} transition={{ delay: 2.4, ...popIn.transition }}>
+      <motion.div {...popIn(2.5)}>
         <Button asChild size="lg" className="px-8">
           <Link href="/auth/signup" className="flex items-center gap-2">
             Get Started

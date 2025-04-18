@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { popIn } from "@/lib/animations";
 
 /**
  * Interface for room creation data
@@ -82,17 +83,7 @@ export function CreateRoomDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-            delay: 0.3,
-          }}
-          viewport={{ once: true }}
-        >
+        <motion.div {...popIn(0.3)}>
           <Button className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Create Room
