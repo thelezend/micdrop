@@ -1,6 +1,7 @@
 "use client";
 
 import { TypographyH2 } from "@/components/typography";
+import { fadeInView } from "@/lib/animations";
 import { motion } from "framer-motion";
 import BrandText from "../brand-text";
 import { BackgroundBeams } from "../ui/background-beams";
@@ -103,16 +104,6 @@ export const trendingRooms = [
   },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
 /**
  * TrendingRooms component displays a grid of trending voice rooms
  * Used on the home page to showcase popular rooms
@@ -122,11 +113,7 @@ export function TrendingRooms() {
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div {...fadeInView}>
             <TypographyH2 className="border-none text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Trending on{" "}
               <BrandText className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">
@@ -135,9 +122,7 @@ export function TrendingRooms() {
             </TypographyH2>
           </motion.div>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            {...fadeInView}
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-500 md:text-xl dark:text-gray-400"
           >
@@ -146,12 +131,7 @@ export function TrendingRooms() {
           </motion.p>
         </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-        >
+        <motion.div {...fadeInView}>
           <InfiniteMovingCards
             items={trendingRooms}
             direction="left"

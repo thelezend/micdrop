@@ -7,6 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  childFadeInView,
+  fadeInView,
+  parentContainerFadeInView,
+} from "@/lib/animations";
 import { motion } from "framer-motion";
 import {
   Gamepad,
@@ -59,31 +64,12 @@ const features = [
   },
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
-
 export function Features() {
   return (
     <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white py-20 dark:from-gray-900/50 dark:to-gray-900/30">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div {...fadeInView}>
             <TypographyH2 className="border-none text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Why{" "}
               <BrandText className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">
@@ -93,9 +79,7 @@ export function Features() {
             </TypographyH2>
           </motion.div>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            {...fadeInView}
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-500 md:text-xl dark:text-gray-400"
           >
@@ -104,14 +88,11 @@ export function Features() {
         </div>
 
         <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          {...parentContainerFadeInView}
           className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
           {features.map((feature, index) => (
-            <motion.div key={index} variants={item}>
+            <motion.div key={index} {...childFadeInView}>
               <Card>
                 <CardHeader>
                   <AnimatedIcon
@@ -122,9 +103,7 @@ export function Features() {
                   <CardTitle className="mb-2 text-xl">
                     {feature.title}
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground">
-                    {feature.description}
-                  </CardDescription>
+                  <CardDescription>{feature.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {/* Room for additional content if needed */}

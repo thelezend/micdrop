@@ -1,5 +1,6 @@
 "use client";
 
+import { fadeIn, popIn } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowRight, MicVocal } from "lucide-react";
@@ -19,6 +20,7 @@ const Hero = ({ className }: { className?: string }) => {
         className,
       )}
     >
+      {/* Brand Text */}
       <div className="flex items-center justify-center gap-1">
         <motion.div
           initial={{ opacity: 0, x: -100 }}
@@ -61,38 +63,24 @@ const Hero = ({ className }: { className?: string }) => {
         </motion.div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 2 }}
-      >
+      {/* Sub heading */}
+      <motion.div {...fadeIn} transition={{ delay: 2, ...fadeIn.transition }}>
         <TypographyH2 className="border-b-0 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           Voice based social conversations in real time
         </TypographyH2>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 2.2 }}
-      >
+      {/* Description */}
+      <motion.div {...fadeIn} transition={{ delay: 2.2, ...fadeIn.transition }}>
         <TypographyP className="text-muted-foreground max-w-2xl text-center">
           Join live audio rooms, connect with like-minded people, and share your
-          thoughts on topics that matter to you. No recordings, no pressure -
-          just authentic conversations.
+          thoughts on topics that matter to you. No pressure - just authentic
+          conversations.
         </TypographyP>
       </motion.div>
 
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 20,
-          delay: 2.4,
-        }}
-      >
+      {/* Button */}
+      <motion.div {...popIn} transition={{ delay: 2.4, ...popIn.transition }}>
         <Button asChild size="lg" className="px-8">
           <Link href="/auth/signup" className="flex items-center gap-2">
             Get Started

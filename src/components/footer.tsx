@@ -1,27 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  childFadeInView,
+  fadeInView,
+  parentContainerFadeInView,
+} from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { MicVocal } from "lucide-react";
 import Link from "next/link";
 import BrandText from "./brand-text";
 import { GitHubIcon, InstagramIcon, XIcon, YouTubeIcon } from "./logos";
-import { motion } from "framer-motion";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
 
 /**
  * Footer component with social media links
@@ -38,9 +28,7 @@ const Footer = ({ className }: { className?: string }) => {
 
   return (
     <motion.footer
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      {...fadeInView}
       className={cn("w-full border-t-2 dark:bg-stone-950", className)}
     >
       <div className="container mx-auto flex flex-col items-center justify-center gap-4 py-6">
@@ -50,16 +38,13 @@ const Footer = ({ className }: { className?: string }) => {
         </motion.div>
 
         <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          {...parentContainerFadeInView}
           className="flex items-center space-x-4"
         >
           {socialLinks.map((social, index) => {
             const Icon = social.icon;
             return (
-              <motion.div key={index} variants={item}>
+              <motion.div key={index} {...childFadeInView}>
                 <Button
                   variant="outline"
                   size="icon"
@@ -81,10 +66,8 @@ const Footer = ({ className }: { className?: string }) => {
         </motion.div>
 
         <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.2 }}
-          viewport={{ once: true }}
+          {...fadeInView}
+          transition={{ delay: 0.8 }}
           className="text-center text-sm text-gray-500"
         >
           © 2025 Micdrop. All rights reserved. <br />
