@@ -26,6 +26,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  fadeInFromLeft,
+  fadeInFromRight,
+  fadeInView,
+  fadeInViewWithScale,
+  popFromLeft,
+} from "@/lib/animations";
 
 // Type definition for emoji reaction events
 type EmojiReaction = {
@@ -371,11 +378,7 @@ const RoomClient = ({
         />
       )}
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <motion.div {...fadeInView()}>
         <TypographyH1 className="mb-2 text-2xl font-bold md:text-3xl">
           {roomData.title}
         </TypographyH1>
@@ -387,11 +390,7 @@ const RoomClient = ({
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="flex flex-2/3 flex-col gap-6">
           {/* Speakers Section */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          <motion.div {...fadeInFromLeft(0.3)}>
             <Card>
               <CardHeader className="border-b">
                 <CardTitle>Speakers</CardTitle>
@@ -414,7 +413,9 @@ const RoomClient = ({
                 {/* Controls row - contains room controls and emoji reactions */}
                 <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
                   {/* Emoji Reactions */}
-                  <EmojiReactions onSendReaction={handleSendReaction} />
+                  <motion.div {...popFromLeft(1)}>
+                    <EmojiReactions onSendReaction={handleSendReaction} />
+                  </motion.div>
 
                   {/* Room Controls */}
                   <RoomControls
@@ -431,20 +432,16 @@ const RoomClient = ({
           </motion.div>
 
           {/* Listeners Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
+          <motion.div {...fadeInViewWithScale(0.3)}>
             <ListenersList
               listeners={roomData.listeners}
               currentUserId={currentUserId}
               isCurrentUserHost={roomData.speakers.some(
-                (s) => s.id === currentUserId && s.isHost
+                (s) => s.id === currentUserId && s.isHost,
               )}
               onApproveRaiseHand={
                 roomData.speakers.some(
-                  (s) => s.id === currentUserId && s.isHost
+                  (s) => s.id === currentUserId && s.isHost,
                 )
                   ? handleApproveRaiseHand
                   : undefined
@@ -453,17 +450,13 @@ const RoomClient = ({
           </motion.div>
         </div>
 
-        <div className="h-fill flex-1/3 space-y-6">
-          {/* Chat Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="h-full overflow-auto"
-          >
-            <ChatPanel messages={messages} onSendMessage={handleSendMessage} />
-          </motion.div>
-        </div>
+        {/* Chat Section */}
+        <motion.div
+          {...fadeInFromRight(0.3)}
+          className="flex-1/3 space-y-6 overflow-auto"
+        >
+          <ChatPanel messages={messages} onSendMessage={handleSendMessage} />
+        </motion.div>
       </div>
     </div>
   );

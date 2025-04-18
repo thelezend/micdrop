@@ -1,28 +1,12 @@
 import { TypographySmall } from "@/components/typography";
 import { UserAvatar } from "@/components/user/avatar";
+import { childFadeInView, parentContainerFadeInView } from "@/lib/animations";
 import { motion } from "framer-motion";
+import { Crown, Mic, MicOff, UserMinus, Volume2 } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Mic, MicOff, Volume2, Crown, UserMinus } from "lucide-react";
-import { Slider } from "../ui/slider";
 import { Button } from "../ui/button";
-// import { cn } from "@/lib/utils";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, scale: 0.5 },
-  show: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.5 },
-};
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Slider } from "../ui/slider";
 
 interface Speaker {
   id: string;
@@ -59,16 +43,13 @@ export function SpeakersGrid({
 }: SpeakersGridProps) {
   return (
     <motion.div
-      variants={container}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true }}
+      {...parentContainerFadeInView(0.1)}
       className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3 md:grid-cols-4"
     >
       {speakers.map((speaker) => (
         <motion.div
           key={speaker.id}
-          variants={item}
+          {...childFadeInView}
           className="flex flex-col items-center"
         >
           <Popover>

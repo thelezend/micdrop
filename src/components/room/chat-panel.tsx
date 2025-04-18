@@ -2,6 +2,7 @@ import { TypographyMuted, TypographySmall } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserAvatar } from "@/components/user/avatar";
+import { fadeInViewWithScale, popIn } from "@/lib/animations";
 import { AnimatePresence, motion } from "framer-motion";
 import { Send } from "lucide-react";
 import Link from "next/link";
@@ -55,15 +56,12 @@ export function ChatPanel({ messages, onSendMessage }: ChatPanelProps) {
         <CardTitle>Chat</CardTitle>
       </CardHeader>
 
-      <CardContent className="max-h-screen overflow-auto">
+      <CardContent className="max-h-[500px] overflow-auto">
         <AnimatePresence initial={false}>
           {messages.map((message) => (
             <motion.div
               key={message.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              {...fadeInViewWithScale()}
               className="mb-4"
             >
               <div className="flex items-start gap-2">
@@ -99,22 +97,24 @@ export function ChatPanel({ messages, onSendMessage }: ChatPanelProps) {
         </AnimatePresence>
       </CardContent>
 
-      <CardFooter className="flex items-center gap-2">
-        <Input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          className="flex-1"
-        />
-        <Button
-          size="icon"
-          onClick={handleSendMessage}
-          disabled={!newMessage.trim()}
-        >
-          <Send className="h-4 w-4" />
-        </Button>
-      </CardFooter>
+      <motion.div {...popIn(0.5)}>
+        <CardFooter className="flex items-center gap-2">
+          <Input
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message..."
+            className="flex-1"
+          />
+          <Button
+            size="icon"
+            onClick={handleSendMessage}
+            disabled={!newMessage.trim()}
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </CardFooter>
+      </motion.div>
     </Card>
   );
 }

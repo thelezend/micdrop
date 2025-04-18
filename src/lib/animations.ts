@@ -6,6 +6,26 @@ export const fadeIn = (delay: number = 0) => ({
   },
 });
 
+export const fadeInFromLeft = (delay: number = 0) => ({
+  initial: { opacity: 0, x: -20 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: true },
+  transition: {
+    duration: 0.5,
+    delay,
+  },
+});
+
+export const fadeInFromRight = (delay: number = 0) => ({
+  initial: { opacity: 0, x: 20 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: true },
+  transition: {
+    duration: 0.5,
+    delay,
+  },
+});
+
 export const fadeInView = (delay: number = 0) => ({
   initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
@@ -56,6 +76,18 @@ export const popFromLeft = (delay: number = 0) => ({
 export const popFromRight = (delay: number = 0) => ({
   initial: { x: 20, opacity: 0 },
   whileInView: { x: 0, opacity: 1 },
+  viewport: { once: true },
+  transition: {
+    type: "spring",
+    stiffness: 300,
+    damping: 15,
+    delay,
+  },
+});
+
+export const popFromTop = (delay: number = 0) => ({
+  initial: { y: -20, opacity: 0 },
+  whileInView: { y: 0, opacity: 1 },
   viewport: { once: true },
   transition: {
     type: "spring",

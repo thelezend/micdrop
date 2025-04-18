@@ -15,21 +15,7 @@ import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20, scale: 0.9 },
-  show: { opacity: 1, y: 0, scale: 1 },
-};
+import { childFadeInView, parentContainerFadeInView } from "@/lib/animations";
 
 interface Listener {
   id: string;
@@ -74,16 +60,13 @@ export function ListenersList({
 
       <CardContent>
         <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          {...parentContainerFadeInView(0.1)}
           className="grid grid-cols-2 gap-4 p-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
         >
           {sortedListeners.map((listener) => (
             <motion.div
               key={listener.id}
-              variants={item}
+              {...childFadeInView}
               className="relative flex flex-col items-center"
             >
               <Popover>
