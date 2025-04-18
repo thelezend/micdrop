@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { fadeInViewWithScale } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { Calendar, Mic, Users } from "lucide-react";
 import Link from "next/link";
@@ -39,14 +40,12 @@ export function PastRooms({ rooms }: PastRoomsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      {rooms.map((room, index) => (
-        <motion.div
-          key={room.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.1 }}
-        >
+    <motion.div
+      {...fadeInViewWithScale()}
+      className="grid grid-cols-1 gap-4 md:grid-cols-2"
+    >
+      {rooms.map((room) => (
+        <motion.div key={room.id}>
           <Card className="h-full">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
@@ -90,6 +89,6 @@ export function PastRooms({ rooms }: PastRoomsProps) {
           </Card>
         </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

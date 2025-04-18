@@ -3,25 +3,15 @@ import { TypographyH1, TypographyP } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserAvatar } from "@/components/user/avatar";
+import {
+  childFadeInView,
+  fadeInView,
+  parentContainerFadeInView,
+  popIn,
+} from "@/lib/animations";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Users } from "lucide-react";
 import Link from "next/link";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
 
 interface ProfileHeaderProps {
   username: string;
@@ -65,9 +55,7 @@ export function ProfileHeader({
     <div className="space-y-6">
       <motion.div
         className="flex flex-col items-center gap-6 md:flex-row md:items-start"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        {...fadeInView()}
       >
         <UserAvatar
           src={avatarUrl}
@@ -87,14 +75,11 @@ export function ProfileHeader({
           <TypographyP className="mb-4 max-w-md">{bio}</TypographyP>
 
           <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+            {...parentContainerFadeInView(0.1)}
             className="mb-4 flex items-center justify-center space-x-3 md:justify-start"
           >
             {socialLinks.website && (
-              <motion.div variants={item}>
+              <motion.div {...childFadeInView}>
                 <Button
                   variant="outline"
                   size="icon"
@@ -114,7 +99,7 @@ export function ProfileHeader({
             )}
 
             {socialLinks.twitter && (
-              <motion.div variants={item}>
+              <motion.div {...childFadeInView}>
                 <Button
                   variant="outline"
                   size="icon"
@@ -134,7 +119,7 @@ export function ProfileHeader({
             )}
 
             {socialLinks.instagram && (
-              <motion.div variants={item}>
+              <motion.div {...childFadeInView}>
                 <Button
                   variant="outline"
                   size="icon"
@@ -148,7 +133,7 @@ export function ProfileHeader({
             )}
 
             {socialLinks.github && (
-              <motion.div variants={item}>
+              <motion.div {...childFadeInView}>
                 <Button
                   variant="outline"
                   size="icon"
@@ -168,7 +153,10 @@ export function ProfileHeader({
             )}
           </motion.div>
 
-          <div className="flex items-center justify-center gap-6 md:justify-start">
+          <motion.div
+            {...fadeInView(0.8)}
+            className="flex items-center justify-center gap-6 md:justify-start"
+          >
             <div className="flex items-center gap-1">
               <Users className="text-muted-foreground h-4 w-4" />
               <span className="text-sm font-medium">
@@ -181,19 +169,10 @@ export function ProfileHeader({
                 {followingCount} following
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-            delay: 0.3,
-          }}
-        >
+        <motion.div {...popIn(0.3)}>
           {isCurrentUser ? (
             <Button variant="outline" asChild>
               <Link href="/settings">Edit Profile</Link>
@@ -214,15 +193,7 @@ export function ProfileHeader({
         className="w-full"
         onValueChange={onActiveTabChange}
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 15,
-          }}
-        >
+        <motion.div {...popIn()}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="rooms" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />

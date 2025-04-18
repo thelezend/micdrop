@@ -5,7 +5,7 @@ import { RoomCard } from "@/components/room/room-card";
 import { TypographyH1 } from "@/components/typography";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { fadeInView } from "@/lib/animations";
+import { fadeInViewWithScale } from "@/lib/animations";
 import { motion } from "framer-motion";
 import { Clock, Search, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
@@ -234,12 +234,15 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 flex flex-col items-center justify-between gap-2 md:flex-row">
-        <motion.span {...fadeInView()}>
+        <motion.span {...fadeInViewWithScale()}>
           <TypographyH1 className="text-3xl font-bold md:mb-0">
             Explore Rooms
           </TypographyH1>
         </motion.span>
-        <motion.div {...fadeInView(0.5)} className="flex items-center gap-2">
+        <motion.div
+          {...fadeInViewWithScale(0.5)}
+          className="flex items-center gap-2"
+        >
           <Search />
           <Input
             className="w-80"
@@ -252,7 +255,7 @@ export default function DashboardPage() {
       </div>
 
       <Tabs defaultValue="trending" className="mb-8">
-        <motion.div {...fadeInView(0.1)}>
+        <motion.div {...fadeInViewWithScale(0.1)}>
           <TabsList className="mb-8 grid w-full grid-cols-3">
             <TabsTrigger
               value="trending"
@@ -283,7 +286,7 @@ export default function DashboardPage() {
 
         <TabsContent value="trending" className="mt-0">
           <motion.div
-            {...fadeInView()}
+            {...fadeInViewWithScale()}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {filteredRooms.map((room) => (
@@ -293,7 +296,7 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent value="new" className="mt-0">
           <motion.div
-            {...fadeInView()}
+            {...fadeInViewWithScale()}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {filteredRooms.map((room) => (
@@ -303,7 +306,7 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent value="following" className="mt-0">
           <motion.div
-            {...fadeInView()}
+            {...fadeInViewWithScale()}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {filteredRooms.map((room) => (

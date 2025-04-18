@@ -1,7 +1,7 @@
 "use client";
 
 import { TypographyH2 } from "@/components/typography";
-import { fadeInView } from "@/lib/animations";
+import { fadeInViewWithScale } from "@/lib/animations";
 import { motion } from "framer-motion";
 import BrandText from "../brand-text";
 import { BackgroundBeams } from "../ui/background-beams";
@@ -113,7 +113,7 @@ export function TrendingRooms() {
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <motion.div {...fadeInView()}>
+          <motion.div {...fadeInViewWithScale()}>
             <TypographyH2 className="border-none text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Trending on{" "}
               <BrandText className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">
@@ -122,7 +122,7 @@ export function TrendingRooms() {
             </TypographyH2>
           </motion.div>
           <motion.p
-            {...fadeInView(0.2)}
+            {...fadeInViewWithScale(0.2)}
             className="mt-4 text-gray-500 md:text-xl dark:text-gray-400"
           >
             Join the hottest conversations and connect with passionate voices
@@ -130,7 +130,7 @@ export function TrendingRooms() {
           </motion.p>
         </div>
 
-        <motion.div {...fadeInView()}>
+        <motion.div {...fadeInViewWithScale()}>
           <InfiniteMovingCards
             items={trendingRooms}
             direction="left"

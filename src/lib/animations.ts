@@ -7,6 +7,16 @@ export const fadeIn = (delay: number = 0) => ({
 });
 
 export const fadeInView = (delay: number = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: {
+    duration: 0.3,
+    delay,
+  },
+});
+
+export const fadeInViewWithScale = (delay: number = 0) => ({
   initial: { opacity: 0, y: 20, scale: 0.9 },
   whileInView: { opacity: 1, y: 0, scale: 1 },
   viewport: { once: true },

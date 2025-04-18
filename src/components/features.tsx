@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import {
   childFadeInView,
-  fadeInView,
+  fadeInViewWithScale,
   parentContainerFadeInView,
 } from "@/lib/animations";
 import { motion } from "framer-motion";
@@ -69,7 +69,7 @@ export function Features() {
     <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white py-20 dark:from-gray-900/50 dark:to-gray-900/30">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <motion.div {...fadeInView()}>
+          <motion.div {...fadeInViewWithScale()}>
             <TypographyH2 className="border-none text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Why{" "}
               <BrandText className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl">
@@ -79,7 +79,7 @@ export function Features() {
             </TypographyH2>
           </motion.div>
           <motion.p
-            {...fadeInView(0.2)}
+            {...fadeInViewWithScale(0.2)}
             className="mt-4 text-gray-500 md:text-xl dark:text-gray-400"
           >
             Discover what makes MicDrop the ultimate voice-based social platform

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   childFadeInView,
-  fadeInView,
+  fadeInViewWithScale,
   parentContainerFadeInView,
 } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,7 @@ const Footer = ({ className }: { className?: string }) => {
 
   return (
     <motion.footer
-      {...fadeInView()}
+      {...fadeInViewWithScale()}
       className={cn("w-full border-t-2 dark:bg-stone-950", className)}
     >
       <div className="container mx-auto flex flex-col items-center justify-center gap-4 py-6">
@@ -66,7 +66,7 @@ const Footer = ({ className }: { className?: string }) => {
         </motion.div>
 
         <motion.span
-          {...fadeInView(1.2)}
+          {...fadeInViewWithScale(1.2)}
           className="text-center text-sm text-gray-500"
         >
           © 2025 Micdrop. All rights reserved. <br />
